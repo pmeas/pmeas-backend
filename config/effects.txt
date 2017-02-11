@@ -1,0 +1,6 @@
+{
+	"effect": "delay",
+	"parameters": {
+		"balance": 4
+	}
+}
