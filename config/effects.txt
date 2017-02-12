@@ -1,6 +1,5 @@
 {
-	"effect": "delay",
-	"parameters": {
+	"harmonizer": {
 		"balance": 4
 	}
 }
