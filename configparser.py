@@ -1,6 +1,6 @@
 import json
 
-def readConfigFile():
+def read_config_file():
     """
     Reads the configuration file stored in config/
     Returns string being read.
@@ -10,16 +10,15 @@ def readConfigFile():
     config_file.close()
     return config_data
 
-def parseConfigFile(config_data):
+def parse_config_file(config_data):
     """
     Parse the data from the file into respective
     objects.
     Currently prints the objects to the screen for testing.
     """
     config_data = json.loads(config_data)
-    print("Effect: " + config_data['effect'])
-    parameters = config_data['parameters']
-    print("Parameters: " + str(parameters))
+    return config_data
 
-contents = readConfigFile()
-parseConfigFile(contents)
+def get_effects():
+    file_contents = read_config_file()
+    return parse_config_file(file_contents)
