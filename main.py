@@ -15,49 +15,50 @@ audio_in = pyo.Input(chnl=0)
 effects_dict = configparser.get_effects()
 for effect in effects_dict.keys():
     #print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
+    params = effects_dict[effect]
     if effect == 'distortion':
         #distortion stuff
         print("Enable distortion effect")
         if effect_one is None:
-            effect_one = pyo.Disto(audio_in, drive=0.75, slope=0.5, mul=1, add=0).out()
+            effect_one = pyo.Disto(audio_in, drive=int(params['drive']), slope=int(params['slope']), mul=1, add=0).out()
         else:
-            effect_two = pyo.Disto(effect_one, drive=0.75, slope=0.5, mul=1, add=0).out()
+            effect_two = pyo.Disto(effect_one, drive=int(params['drive']), slope=int(params['slope']), mul=1, add=0).out()
     elif effect == 'delay':
         #delay stuff
         print("Enable delay effect")
         if effect_one is None:
-            effect_one = pyo.Delay(audio_in, delay=.25, feedback=0.5, mul=0.5).out()
+            effect_one = pyo.Delay(audio_in, delay=int(params['delay']), feedback=int(params['feedback']), mul=0.5).out()
         else:
-            effect_two = pyo.Delay(effect_one, delay=.25, feedback=0.5, mul=0.5).out()
+            effect_two = pyo.Delay(effect_one, delay=int(params['delay']), feedback=int(params['feedback']), mul=0.5).out()
     elif effect == 'reverb':
         #reverb stuff
         print("Enable reverb effect")
         # there's a TON of reverb effects in Pyo. Gotta find out which one is the right to implement.
         if effect_one is None:
-            effect_one = pyo.Freeverb(audio_in, size=0.5, damp=0.5, bal=0.5, mul=1, add=0).out()
+            effect_one = pyo.STRev(audio_in, inpos=0.25, revtime=int(params['revtime']), cutoff=int(params['cutoff']), bal=int(params['balance']), roomSize=int(params['roomsize'])).out()
         else:
-            effect_two = pyo.Freeverb(effect_one, size=0.5, damp=0.5, bal=0.5, mul=1, add=0).out()
+            effect_two = pyo.STRev(effect_one, inpos=0.25, revtime=int(params['revtime']), cutoff=int(params['cutoff']), bal=int(params['balance']), roomSize=int(params['roomsize'])).out()
     elif effect == 'chorus':
         #chorus stuff
         print("Enable chorus effect")
         if effect_one is None:
-            effect_one = pyo.Chorus(audio_in, depth=1, feedback=0.25, bal=0.5, mul=1, add=0).out()
+            effect_one = pyo.Chorus(audio_in, depth=int(params['depth']), feedback=int(params['feedback']), bal=int(params['balance'], mul=1, add=0).out()
         else:
-            effect_two = pyo.Chorus(effect_one, depth=1, feedback=0.25, bal=0.5, mul=1, add=0).out()
+            effect_two = pyo.Chorus(effect_one, depth=int(params['depth']), feedback=int(params['feedback']), bal=int(params['balance'], mul=1, add=0).out()
     elif effect == 'freqshift':
         #frequency shift stuff
         print("Enable frequency shift effect")
         if effect_one is None:
-            effect_one = pyo.FreqShift(audio_in, shift=100, mul=1, add=0).out()
+            effect_one = pyo.FreqShift(audio_in, shift=int(params['shift']), mul=1, add=0).out()
         else:
-            effect_two = pyo.FreqShift(effect_one, shift=100, mul=1, add=0).out()
+            effect_two = pyo.FreqShift(effect_one, shift=int(params['shift']), mul=1, add=0).out()
     elif effect == 'harmonizer':
         #harmonizer stuff
         print("Enable harmonizer effect")
         if effect_one is None:
-            effect_one = pyo.Harmonizer(audio_in, transpo=-7.0, feedback=0, winsize=0.1, mul=1, add=0).out()
+            effect_one = pyo.Harmonizer(audio_in, transpo=int(params['transpose']), feedback=int(params['feedback']), winsize=0.1, mul=1, add=0).out()
         else:
-            effect_two = pyo.Harmonizer(effect_one, transpo=-7.0, feedback=0, winsize=0.1, mul=1, add=0).out()
+            effect_two = pyo.Harmonizer(effect_one, transpo=int(params['transpose']), feedback=int(params['feedback']), winsize=0.1, mul=1, add=0).out()
     else:
         # For invalid input just output direct audio
         if effect_one is None:
