@@ -1,7 +1,7 @@
 import subprocess
 
 def start_jack_server(inputport, outputport):
-    process = subprocess.call('jackd -P 70 -d alsa -r 48000 -p 1024 -n 2 -D -C ' + inputport + '-P ' + outputport, shell=True)
+    process = subprocess.call('jackd -P 70 -d alsa -r 48000 -p 1024 -n 2 -D -C &' + inputport + '-P ' + outputport, shell=True)
 
 def get_input_devices():
     process = subprocess.Popen(['arecord', '-l'], stdout=subprocess.PIPE)
@@ -20,5 +20,3 @@ def filter_shell_output(data):
         if 'card' in line:
             sound_devices.append(line)
     return sound_devices
-
-start_jack_server(1, 1)
