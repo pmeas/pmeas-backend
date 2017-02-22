@@ -1,4 +1,7 @@
 {
+	"delay": {
+		"balance": 4
+	},
 	"harmonizer": {
 		"balance": 4
 	}
