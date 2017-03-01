@@ -1,5 +1,5 @@
-import pyo
 import time
+import pyo
 import configparser
 
 def start_pyo_server():
