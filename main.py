@@ -43,6 +43,7 @@ for effect in effects_dict.keys():
 
 enabled_effects[len(enabled_effects)-1].out()
 
+
 # Eliminate need for GUI with loop - eventually to be used for updating effects.
 while True:
     time.sleep(1)
