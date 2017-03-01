@@ -39,3 +39,21 @@ def filter_shell_output(data):
         if 'card' in line:
             sound_devices.append(line)
     return sound_devices
+
+
+def filter_port_selection(selected_port):
+    """
+    Filter the port data received from the GUI.
+
+    Will extract the card number and device number to allow
+    JACK to identify the port selected and lock them for use.
+
+    selected_port -- The raw data received from the GUI application
+
+    Return the port selected formatted for JACK - hw:card,device
+    """
+    card_num = selected_port.find('card') + 5
+    device_num = selected_port[(selected_port.find('device') + 7): (selected_port.rfind(':'))]
+    return "hw:" + str(card_num) + "," + str(device_num)
+    #print(str(card_num) + ", " + str(device_num))
+
