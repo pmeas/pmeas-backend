@@ -1,5 +1,8 @@
 {
-	"harmonizer": {
+	"delay": {
+		"balance": 4
+	},
+	"chorus": {
 		"balance": 4
 	}
 }
