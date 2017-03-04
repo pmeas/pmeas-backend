@@ -27,8 +27,8 @@ for effect in effects_dict.keys():
         print("Enable distortion effect")
         enabled_effects.append(pyo.Disto(
                                 enabled_effects[len(enabled_effects)-1],
-                                drive=int(params['drive']),
-                                slope=int(params['slope']),
+                                drive=float(params['drive']),
+                                slope=float(params['slope']),
                                 mul=1,
                                 add=0)
                             )
@@ -37,9 +37,11 @@ for effect in effects_dict.keys():
         print("Enable delay effect")
         enabled_effects.append(pyo.Delay(
                                 enabled_effects[len(enabled_effects)-1],
-                                delay=int(params['delay']),
-                                feedback=int(params['feedback']),
-                                mul=0.5)
+                                delay=[0, float(params['delay'])],
+                                feedback=float(params['feedback']),
+				maxdelay=10,
+				mul=1,
+                                add=0)
                             )
     elif effect == 'reverb':
         #reverb stuff
@@ -47,28 +49,43 @@ for effect in effects_dict.keys():
         enabled_effects.append(pyo.STRev(
                                 enabled_effects[len(enabled_effects)-1],
                                 inpos=0.25,
-                                revtime=int(params['revtime']),
-                                cutoff=int(params['cutoff']),
-                                bal=int(params['balance']),
-                                roomSize=int(params['roomsize']))
+                                revtime=float(params['revtime']),
+                                cutoff=float(params['cutoff']),
+                                bal=float(params['balance']),
+                                roomSize=float(params['roomsize']),
+				mul=1,
+				add=0)
                             )
     elif effect == 'chorus':
         #chorus stuff
         print("Enable chorus effect")
         enabled_effects.append(pyo.Chorus(
                                 enabled_effects[len(enabled_effects)-1],
-                                depth=int(params['depth']),
-                                feedback=int(params['feedback']),
-                                bal=int(params['balance']),
+                                depth=float(params['depth']),
+                                feedback=float(params['feedback']),
+                                bal=float(params['balance']),
                                 mul=1,
                                 add=0)
                             )
+#    This will be used once the class is created
+#
+#    elif effect == 'flanger':
+#        #harmonizer stuff
+#        print("Enable flanger effect")
+#        enabled_effects.append(pyo.Flanger(
+#                                enabled_effects[len(enabled_effects)-1],
+#                                depth=float(params['depth']),
+#                                lfofreq=float(params['lfofreq']),
+#				feedback=float(params['feedback']),
+#                                mul=1,
+#                                add=0)
+#                            )
     elif effect == 'freqshift':
         #frequency shift stuff
         print("Enable frequency shift effect")
         enabled_effects.append(pyo.FreqShift(
                                 enabled_effects[len(enabled_effects)-1],
-                                shift=int(params['shift']),
+                                shift=params['shift'],
                                 mul=1,
                                 add=0)
                             )
@@ -77,8 +94,8 @@ for effect in effects_dict.keys():
         print("Enable harmonizer effect")
         enabled_effects.append(pyo.Harmonizer(
                                 enabled_effects[len(enabled_effects)-1],
-                                transpo=int(params['transpose']),
-                                feedback=int(params['feedback']),
+                                transpo=params['transpose'],
+                                feedback=float(params['feedback']),
                                 winsize=0.1,
                                 mul=1,
                                 add=0)
