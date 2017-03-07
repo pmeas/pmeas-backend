@@ -14,12 +14,11 @@ def start_pyo_server():
 
 pyo_server = start_pyo_server()
 
-enabled_effects = []
-
 # Read input from the audio device on channel 1
-enabled_effects.append(pyo.Input(chnl=0))
+enabled_effects = [pyo.Input(chnl=0)]
 
 effects_dict = configparser.get_effects()
+
 for effect in effects_dict.keys():
     #print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
     params = effects_dict[effect]
@@ -99,9 +98,21 @@ for effect in effects_dict.keys():
                                 mul=1,
                                 add=0)
                             )
+    elif effect == 'phaser':
+        #phaser laser stuff
+        print("Enable phaser effect")
+        enabled_effects.append(pyo.Harmonizer(
+            enabled_effects[len(enabled_effects) - 1],
+            freq=float(params['frequency']),
+            spread=float(params['spread']),
+            q=float(params['q']),
+            feedback=float(params['feedback']),
+            num=int(params['num'])),
+            mul=1,
+            add=0
+        )
 
 enabled_effects[len(enabled_effects)-1].out()
-
 
 # Eliminate need for GUI with loop - eventually to be used for updating effects.
 # Will be the location of the socket that will establish connection with GUI
