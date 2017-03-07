@@ -1,7 +1,7 @@
 {
 	"flanger": {
 		"depth": 0.75,
-		"lfofreq": 0.2,
+		"freq": 0.2,
 		"feedback": 0.5
 	},
 	"distortion": {

@@ -73,7 +73,7 @@ for effect in effects_dict.keys():
         enabled_effects.append(flanger.Flanger(
                                 enabled_effects[len(enabled_effects)-1],
                                 depth=float(params['depth']),
-                                lfofreq=float(params['lfofreq']),
+                                freq=float(params['freq']),
 				feedback=float(params['feedback']),
                                 mul=1,
                                 add=0)
