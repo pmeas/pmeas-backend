@@ -136,7 +136,7 @@ def main():
     # restart the program
     with open(configparser.PATH) as effectsFile:
         jstr = bridge.backend(SOCKET_TIMEOUT)
-        while not jstr and BOTHER_TRYING_TO_CONNECT:
+        while not jstr:
             jstr = bridge.backend(SOCKET_TIMEOUT)
             effectsFile.write(jstr)
         main()
