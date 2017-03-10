@@ -3,6 +3,9 @@ import pyo
 import configparser
 import jackserver
 
+import bridge
+SOCKET_TIMEOUT = 30 #seconds
+
 def start_pyo_server():
     """Start the Pyo server
     
@@ -127,11 +130,16 @@ def main():
 
     apply_effects( enabled_effects )
 
-
-    # Eliminate need for GUI with loop - eventually to be used for updating effects.
-    # Will be the location of the socket that will establish connection with GUI
-    while True:
-        time.sleep(1)
+    # Effects have now been loaded from last good configuration
+    # and the modulator is ready, so we'll block and await
+    # await a new configuration. When one arrives, we'll
+    # restart the program
+    with open(configparser.PATH) as effectsFile:
+        jstr = bridge.backend(SOCKET_TIMEOUT)
+        while not jstr and BOTHER_TRYING_TO_CONNECT:
+            jstr = bridge.backend(SOCKET_TIMEOUT)
+            effectsFile.write(jstr)
+        main()
 
 
 if __name__ == "__main__":
