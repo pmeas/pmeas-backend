@@ -1,11 +1,6 @@
 {
-	"flanger": {
-		"depth": 0.75,
-		"freq": 0.2,
+	"delay": {
+		"delay": 1,
 		"feedback": 0.5
-	},
-	"distortion": {
-		"drive": 0.75,
-		"slope": 0.2
 	}
 }

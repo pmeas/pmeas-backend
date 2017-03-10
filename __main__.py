@@ -126,23 +126,18 @@ def main():
     pyo_server.setJackAuto()
 
     # Read input from the audio device on channel 1
-    def reload():
-        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+    enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
 
-        apply_effects( enabled_effects )
+    apply_effects( enabled_effects )
 
+    while True:
         # Effects have now been loaded from last good configuration
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
-        with open(configparser.PATH) as effectsFile:
-            jstr = bridge.backend(SOCKET_TIMEOUT)
-            while not jstr:
-                jstr = bridge.backend(SOCKET_TIMEOUT)
-                effectsFile.write(jstr)
-            reload()
-
-    reload()
+        res = bridge.backend()
+        print(res)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
