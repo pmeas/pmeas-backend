@@ -84,7 +84,7 @@ def chain_effects( initial_source, config_effects_dict ):
             #                                enabled_effects[len(enabled_effects)-1],
             #                                depth=float(params['depth']),
             #                                lfofreq=float(params['lfofreq']),
-            #				feedback=float(params['feedback']),
+            #               feedback=float(params['feedback']),
             #                                mul=1,
             #                                add=0)
             #                            )
@@ -125,21 +125,24 @@ def main():
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
+    reload()
+
     # Read input from the audio device on channel 1
-    enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+    def reload():
+        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
 
-    apply_effects( enabled_effects )
+        apply_effects( enabled_effects )
 
-    # Effects have now been loaded from last good configuration
-    # and the modulator is ready, so we'll block and await
-    # await a new configuration. When one arrives, we'll
-    # restart the program
-    with open(configparser.PATH) as effectsFile:
-        jstr = bridge.backend(SOCKET_TIMEOUT)
-        while not jstr:
+        # Effects have now been loaded from last good configuration
+        # and the modulator is ready, so we'll block and await
+        # await a new configuration. When one arrives, we'll
+        # restart the program
+        with open(configparser.PATH) as effectsFile:
             jstr = bridge.backend(SOCKET_TIMEOUT)
-            effectsFile.write(jstr)
-        main()
+            while not jstr:
+                jstr = bridge.backend(SOCKET_TIMEOUT)
+                effectsFile.write(jstr)
+            reload()
 
 
 if __name__ == "__main__":
