@@ -1,6 +1,1 @@
-{
-	"delay": {
-		"delay": 1,
-		"feedback": 0.5
-	}
-}
+{"delay":{"delay": 1,"feedback": 0.5}}

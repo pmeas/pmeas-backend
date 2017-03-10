@@ -136,7 +136,9 @@ def main():
         # await a new configuration. When one arrives, we'll
         # restart the program
         res = bridge.backend()
-        print(res)
+        # TODO: Check the result of res to see if we should update effects.
+        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+        apply_effects(enabled_effects)
         time.sleep(1)
 
 

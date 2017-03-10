@@ -32,3 +32,17 @@ def get_effects():
     """
     file_contents = read_config_file()
     return parse_config_file(file_contents)
+
+def update_config_file(data):
+    """
+    Overwrites the configuration file containing the effects and
+    parameters with the new effects sent by the GUI interface.
+
+    data -- the effects and parameters data sent by the GUI
+            packaged in a JSON format.
+    """
+    effects_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), PATH)
+
+    with open(effects_file, "w") as config_file:
+        config_file.write(data)
+

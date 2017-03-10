@@ -1,4 +1,4 @@
-import json, socket, subprocess, sys
+import json, socket, subprocess, sys, configparser
 
 PORT = 10000
 
@@ -10,9 +10,9 @@ def backend(timeout=None):
 
     # I dont like this because it blocks -> we'll see if we need to keep listening for same messages
     data, wherefrom = s.recvfrom(1500, 0)
+    configparser.update_config_file(data)
     s.sendto('received', wherefrom)
-    return data
-    
+
 if __name__ == '__main__':
     #USAGE bridge <frontend|backend>
     #run the frontend THEN the backend
@@ -20,3 +20,4 @@ if __name__ == '__main__':
         frontend(sys.stdin.read())
     elif sys.argv[1] == 'backend':
         sys.stdout.write(backend())
+
