@@ -125,8 +125,6 @@ def main():
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
-    reload()
-
     # Read input from the audio device on channel 1
     def reload():
         enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
@@ -143,6 +141,8 @@ def main():
                 jstr = bridge.backend(SOCKET_TIMEOUT)
                 effectsFile.write(jstr)
             reload()
+
+    reload()
 
 
 if __name__ == "__main__":
