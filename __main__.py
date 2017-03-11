@@ -2,6 +2,7 @@ import time
 import pyo
 import configparser
 import jackserver
+import flanger 
 
 def start_pyo_server():
     """Start the Pyo server
@@ -17,7 +18,7 @@ def start_pyo_server():
 def chain_effects( initial_source, config_effects_dict ):
 
     enabled_effects = [initial_source]
-
+    #main_volume = 1
     for effect in config_effects_dict.keys():
 
         source = enabled_effects[len(enabled_effects) - 1]
@@ -73,14 +74,14 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-            elif effect == 'flanger':
+        elif effect == 'flanger':
             # flanger stuff
             print("Enable flanger effect")
             enabled_effects.append(flanger.Flanger(
                 source,
                 depth=float(params['depth']),
-                feedback=float(params['freq']),
-                bal=float(params['feedback']),
+                freq=float(params['freq']),
+                feedback=float(params['feedback']),
                 mul=1,
                 add=0)
             )
@@ -135,3 +136,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    
