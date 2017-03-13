@@ -3,8 +3,13 @@ import pyo
 import configparser
 import jackserver
 
+import RPi.GPIO as GPIO
+
 import bridge
 SOCKET_TIMEOUT = 30 #seconds
+
+record_table = None
+audio_recorder = None
 
 def start_pyo_server():
     """Start the Pyo server
@@ -116,9 +121,20 @@ def chain_effects( initial_source, config_effects_dict ):
 
 def apply_effects( effects_list ):
     effects_list[len(effects_list) - 1].out()
-
+    record_table = NewTable(length=5, chnls=1, feedback=0.5)
+    audio_recorder = TableRec((effects_list[len(effects_list) - 1]), table=record_table, fadetime=0.05)
 
 def main():
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+
+    button_pin = 17
+    last_time = 0
+    time_pressed = 0
+    osc = None
+
+    GPIO.setup(button, GPIO.IN, GPIO.PUD_UP)
 
     #jackserver.start_jack_server(2, 1)
 
@@ -135,11 +151,17 @@ def main():
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
-        res = bridge.backend()
+        #res = bridge.backend()
         # TODO: Check the result of res to see if we should update effects.
-        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-        apply_effects(enabled_effects)
+        #enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+        #apply_effects(enabled_effects)
         time.sleep(1)
+        button_state = GPIO.input(button_pin)
+        if button_state == GPIO.LOW:
+            audio_recorder.play()
+            print("Recording audios for 5 segundos")
+            osc = Osc(table=t, freq=t.getRate(), mul=1).out()
+            
 
 
 if __name__ == "__main__":
