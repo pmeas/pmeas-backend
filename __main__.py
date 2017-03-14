@@ -120,7 +120,7 @@ def apply_effects( effects_list ):
 
 def main():
 
-    gpio.init_gpio(button_pin)
+    #gpio.init_gpio(11)
 
     #jackserver.start_jack_server(2, 1)
 
@@ -146,11 +146,11 @@ def main():
         #apply_effects(enabled_effects)
         time.sleep(0.05)
         button_state = gpio.update_gpio()
-        if button_state == 'RECORDING'
+        if button_state == 'RECORDING':
             audio_recorder.play()
             print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-	        loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
+	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
             
 
 

@@ -2,16 +2,14 @@ import time
 
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(17, GPIO.IN, GPIO.PUD_UP)
+
 BUTTON_STATE = 'INACTIVE'
 pin_state = GPIO.HIGH
-button = 0
+button = 17
 button_pressed = False
-
-def init_gpio(button_pin):
-    button = button_pin
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
 
 def update_gpio():
     pin_state = GPIO.input(button)
