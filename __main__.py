@@ -2,8 +2,7 @@ import time
 import pyo
 import configparser
 import jackserver
-
-import RPi.GPIO as GPIO
+import gpiocontrol as gpio
 
 import bridge
 SOCKET_TIMEOUT = 30 #seconds
@@ -121,15 +120,7 @@ def apply_effects( effects_list ):
 
 def main():
 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-
-    button_pin = 17
-    last_time = 0
-    time_pressed = 0
-    osc = None
-
-    GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
+    gpio.init_gpio(button_pin)
 
     #jackserver.start_jack_server(2, 1)
 
@@ -154,12 +145,12 @@ def main():
         #enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
         #apply_effects(enabled_effects)
         time.sleep(0.05)
-        button_state = GPIO.input(button_pin)
-        if button_state == GPIO.LOW:
+        button_state = gpio.update_gpio()
+        if button_state == 'RECORDING'
             audio_recorder.play()
             print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
+	        loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
             
 
 
