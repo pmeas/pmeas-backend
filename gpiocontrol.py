@@ -2,16 +2,7 @@ import time
 
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(17, GPIO.IN, GPIO.PUD_UP)
-
-BUTTON_STATE = 'INACTIVE'
-pin_state = GPIO.HIGH
-button = 17
-button_pressed = False
-
-def update_gpio():
+def update_gpio(button_pressed):
     pin_state = GPIO.input(button)
     if not button_pressed and pin_state == GPIO.LOW:
         button_pressed = True
@@ -21,9 +12,10 @@ def update_gpio():
     #else held for 3 seconds here
     return BUTTON_STATE
 
-def change_state():
+def change_state(BUTTON_STATE):
     if BUTTON_STATE == 'INACTIVE':
         BUTTON_STATE = 'RECORDING'
     elif BUTTON_STATE == 'RECORDING':
         BUTTON_STATE = 'LOOPING'
+    return BUTTON_STATE
 
