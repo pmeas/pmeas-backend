@@ -143,7 +143,7 @@ def main():
 
     apply_effects( enabled_effects )
 
-    record_table = pyo.NewTable(length=5, chnls=1, feedback=0.5)
+    record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
     audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
 
     while True:
@@ -157,14 +157,18 @@ def main():
         #apply_effects(enabled_effects)
         time.sleep(0.05)
         BUTTON_STATE = gpio_controller.update_gpio()
+        #button_status = GPIO.input(17)
         if BUTTON_STATE == 'RECORDING':
             if not already_recording:
             	print("Recording audios for 5 segundos")
                 audio_recorder.play()
                 already_recording = True
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-    loop = pyo.Looper(table=record_table, dur=5, mul=1).out()
-            
+        #elif BUTTON_STATE == 'LOOPING':
+            loop = pyo.Looper(table=record_table, dur=12, mul=1).out()
+        elif BUTTON_STATE == 'LOOPING':
+            print("Loopings")
+             
 
 
 if __name__ == "__main__":
