@@ -11,7 +11,6 @@ SOCKET_TIMEOUT = 30 #seconds
 
 button_pin = 17
 
-already_recording = False
 
 def start_pyo_server():
     """Start the Pyo server
@@ -132,10 +131,12 @@ def main():
 
     gpio_controller = gpiocontrol.GpioController()
 
+    already_recording = False
     #jackserver.start_jack_server(2, 1)
 
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
+
 
     # Read input from the audio device on channel 1
     enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
@@ -158,11 +159,11 @@ def main():
         BUTTON_STATE = gpio_controller.update_gpio()
         if BUTTON_STATE == 'RECORDING':
             if not already_recording:
+            	print("Recording audios for 5 segundos")
                 audio_recorder.play()
                 already_recording = True
-            print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
+    loop = pyo.Looper(table=record_table, dur=5, mul=1).out()
             
 
 
