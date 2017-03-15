@@ -2,15 +2,14 @@ import time
 import pyo
 import configparser
 import jackserver
-import gpiocontrol as gpio
+import gpiocontrol
+
+import RPi.GPIO as GPIO
 
 import bridge
 SOCKET_TIMEOUT = 30 #seconds
 
-BUTTON_STATE = 'INACTIVE'
-pin_state = GPIO.HIGH
 button_pin = 17
-button_pressed = False
 
 def start_pyo_server():
     """Start the Pyo server
@@ -129,6 +128,8 @@ def main():
     GPIO.setwarnings(False)
     GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
 
+    gpio_controller = gpiocontrol.GpioController()
+
     #jackserver.start_jack_server(2, 1)
 
     pyo_server = start_pyo_server()
@@ -152,12 +153,12 @@ def main():
         #enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
         #apply_effects(enabled_effects)
         time.sleep(0.05)
-        BUTTON_STATE = gpio.update_gpio()
+        BUTTON_STATE = gpio_controller.update_gpio()
         if BUTTON_STATE == 'RECORDING':
             audio_recorder.play()
             print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
+	        loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
             
 
 
