@@ -5,23 +5,23 @@ import RPi.GPIO as GPIO
 class GpioController:
 
     def __init__(self):
-        this.button_pressed = False
-        this.BUTTON_STATE = 'INACTIVE'
+        self.button_pressed = False
+        self.BUTTON_STATE = 'INACTIVE'
 
     def update_gpio(self):
         pin_state = GPIO.input(17)
-        if not this.button_pressed and pin_state == GPIO.LOW:
-            this.button_pressed = True
-        if this.button_pressed and (pin_state == GPIO.HIGH):
-            change_state()
-            this.button_pressed = False
+        if not self.button_pressed and pin_state == GPIO.LOW:
+            self.button_pressed = True
+        if self.button_pressed and (pin_state == GPIO.HIGH):
+            self.change_state()
+            self.button_pressed = False
         #else held for 3 seconds here
-        return this.BUTTON_STATE
+        return self.BUTTON_STATE
 
-    def change_state():
-        if this.BUTTON_STATE == 'INACTIVE':
-            this.BUTTON_STATE = 'RECORDING'
-        elif this.BUTTON_STATE == 'RECORDING':
-            this.BUTTON_STATE = 'LOOPING'
-        return this.BUTTON_STATE
+    def change_state(self):
+        if self.BUTTON_STATE == 'INACTIVE':
+            self.BUTTON_STATE = 'RECORDING'
+        elif self.BUTTON_STATE == 'RECORDING':
+            self.BUTTON_STATE = 'LOOPING'
+        return self.BUTTON_STATE
 

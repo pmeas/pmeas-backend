@@ -158,7 +158,7 @@ def main():
             audio_recorder.play()
             print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-	        loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
+	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
             
 
 
