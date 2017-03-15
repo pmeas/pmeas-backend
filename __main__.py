@@ -11,6 +11,8 @@ SOCKET_TIMEOUT = 30 #seconds
 
 button_pin = 17
 
+already_recording = False
+
 def start_pyo_server():
     """Start the Pyo server
     
@@ -155,7 +157,9 @@ def main():
         time.sleep(0.05)
         BUTTON_STATE = gpio_controller.update_gpio()
         if BUTTON_STATE == 'RECORDING':
-            audio_recorder.play()
+            if not already_recording:
+                audio_recorder.play()
+                already_recording = True
             print("Recording audios for 5 segundos")
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
 	    loop = pyo.Looper(table=record_table, dur=3, mul=1).out()
