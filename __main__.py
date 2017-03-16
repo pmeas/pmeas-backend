@@ -164,18 +164,25 @@ def main():
         if BUTTON_STATE == 'INACTIVE':
             inactive_end_time = time.time()
         if BUTTON_STATE == 'RECORDING':
-            recording_time = recording_time + time.time()
+            recording_time = time.time()
             if not already_recording:
             	print("Recording audios for 5 segundos")
                 audio_recorder.play()
                 already_recording = True
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-        #elif BUTTON_STATE == 'LOOPING':
         elif BUTTON_STATE == 'ACTIVATE_LOOP':
             loop_len = recording_time - inactive_end_time
+            print(loop_len)
             loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
             print("ACTIVATING LOOPINGS")
-             
+            gpio_controller.set_state("LOOPING")
+        elif BUTTON_STATE == 'CLEAR_LOOP':
+            # see if can instantly transition back to inactive instead
+            # of clear loop. Or in the first instance of clear loop set
+            # button state to inactive that way. probably better this way
+            # so we arent constantly setting loop to 0 :>
+            loop = 0
+            gpio_controller.set_state("INACTIVE")
 
 
 if __name__ == "__main__":
