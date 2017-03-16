@@ -160,7 +160,6 @@ def main():
         #apply_effects(enabled_effects)
         time.sleep(0.05)
         BUTTON_STATE = gpio_controller.update_gpio()
-        #button_status = GPIO.input(17)
         if BUTTON_STATE == 'INACTIVE':
             inactive_end_time = time.time()
         if BUTTON_STATE == 'RECORDING':
@@ -172,7 +171,6 @@ def main():
             #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
         elif BUTTON_STATE == 'ACTIVATE_LOOP':
             loop_len = recording_time - inactive_end_time
-            print(loop_len)
             loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
             print("ACTIVATING LOOPINGS")
             gpio_controller.set_state("LOOPING")
@@ -182,6 +180,8 @@ def main():
             # button state to inactive that way. probably better this way
             # so we arent constantly setting loop to 0 :>
             loop = 0
+            record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
+            audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
             gpio_controller.set_state("INACTIVE")
 
 

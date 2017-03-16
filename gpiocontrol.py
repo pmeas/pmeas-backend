@@ -28,7 +28,7 @@ class GpioController:
         # do a check here to see if previous button_state
         # is LOOPING so we can set it to clear_loop ONLY
         # in that instance!
-        if self.time_pressed >= 3:
+        if self.BUTTON_STATE == 'LOOPING' and (self.time_pressed >= 3):
             self.time_pressed = 0
             self.BUTTON_STATE = 'CLEAR_LOOP'
         
