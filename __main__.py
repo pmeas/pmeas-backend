@@ -174,6 +174,7 @@ def main():
             loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
             print("ACTIVATING LOOPINGS")
             gpio_controller.set_state("LOOPING")
+            already_recording = False
         elif BUTTON_STATE == 'CLEAR_LOOP':
             # see if can instantly transition back to inactive instead
             # of clear loop. Or in the first instance of clear loop set

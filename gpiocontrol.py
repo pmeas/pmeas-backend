@@ -9,6 +9,7 @@ class GpioController:
         self.BUTTON_STATE = 'INACTIVE'
         self.last_pressed = 0
         self.time_pressed = 0
+        self.button_held = False
 
     def update_gpio(self):
         pin_state = GPIO.input(17)
@@ -18,20 +19,25 @@ class GpioController:
         if not self.button_pressed and pin_state == GPIO.LOW:
             self.button_pressed = True
 
-        if pin_state == GPIO.HIGH:
-            self.last_pressed = time.time()
-
-        if self.button_pressed and (pin_state == GPIO.HIGH):
+        if self.button_pressed and (pin_state == GPIO.HIGH) and not self.button_held:
             self.change_state()
             self.button_pressed = False
 
-        # do a check here to see if previous button_state
+        if pin_state == GPIO.HIGH:
+            self.last_pressed = time.time()
+            if self.button_held:
+                self.button_held = False
+                self.button_pressed = False
+
+# do a check here to see if previous button_state
         # is LOOPING so we can set it to clear_loop ONLY
         # in that instance!
         if self.BUTTON_STATE == 'LOOPING' and (self.time_pressed >= 3):
             self.time_pressed = 0
+            self.button_held = True
             self.BUTTON_STATE = 'CLEAR_LOOP'
         
+        print("BUTTON STATE: " + self.BUTTON_STATE)
         return self.BUTTON_STATE
 
     def change_state(self):
