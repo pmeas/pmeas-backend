@@ -16,17 +16,17 @@ class GpioController:
         if pin_state == GPIO.LOW:
             self.time_pressed = time.time() - self.last_pressed
 
-        if not self.button_pressed and pin_state == GPIO.LOW:
-            self.button_pressed = True
-
-        if self.button_pressed and (pin_state == GPIO.HIGH) and not self.button_held:
-            self.change_state()
-            self.button_pressed = False
+            if not self.button_pressed:
+                self.button_pressed = True
 
         if pin_state == GPIO.HIGH:
             self.last_pressed = time.time()
             if self.button_held:
                 self.button_held = False
+                self.button_pressed = False
+
+            if self.button_pressed and not self.button_held:
+                self.change_state()
                 self.button_pressed = False
 
 # do a check here to see if previous button_state
