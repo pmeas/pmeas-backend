@@ -22,6 +22,8 @@ class GpioController:
         if self.BUTTON_STATE == 'INACTIVE':
             self.BUTTON_STATE = 'RECORDING'
         elif self.BUTTON_STATE == 'RECORDING':
+            self.BUTTON_STATE = 'ACTIVATE_LOOP':
+        elif self.BUTTON_STATE == 'ACTIVATE_LOOP':
             self.BUTTON_STATE = 'LOOPING'
         return self.BUTTON_STATE
 
