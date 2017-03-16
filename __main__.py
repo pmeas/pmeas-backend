@@ -1,12 +1,20 @@
+GPIO_CAPABLE = False
+
 import time
+
 import pyo
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    pass
+
+if GPIO_CAPABLE:
+    import gpiocontrol
+import bridge
 import configparser
 import jackserver
-import gpiocontrol
 
-import RPi.GPIO as GPIO
 
-import bridge
 SOCKET_TIMEOUT = 30 #seconds
 
 button_pin = 17
@@ -125,27 +133,29 @@ def apply_effects( effects_list ):
 
 def main():
 
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
+    # If GPIO is enabled, initialize the pins and GPIO module.
+    if GPIO_CAPABLE:
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
 
-    gpio_controller = gpiocontrol.GpioController()
+        gpio_controller = gpiocontrol.GpioController()
 
-    already_recording = False
+
+    # JACK and Pyo set up procedures
     #jackserver.start_jack_server(2, 1)
-
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
-
-    # Read input from the audio device on channel 1
+    # Read input from the audio device on channel 0
+    # and apply the necessary effects from the config file 
     enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-
     apply_effects( enabled_effects )
 
+    # Create necessary variables used by the GPIO controller module
     record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
     audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
-
+    already_recording = False
     recording_time = 0
     inactive_end_time = 0
 
@@ -159,31 +169,32 @@ def main():
         #enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
         #apply_effects(enabled_effects)
         time.sleep(0.05)
-        BUTTON_STATE = gpio_controller.update_gpio()
-        if BUTTON_STATE == 'INACTIVE':
-            inactive_end_time = time.time()
-        if BUTTON_STATE == 'RECORDING':
-            recording_time = time.time()
-            if not already_recording:
-            	print("Recording audios for 5 segundos")
-                audio_recorder.play()
-                already_recording = True
-            #osc = pyo.Osc(table=record_table, freq=record_table.getRate(), mul=1).out()
-        elif BUTTON_STATE == 'ACTIVATE_LOOP':
-            loop_len = recording_time - inactive_end_time
-            loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
-            print("ACTIVATING LOOPINGS")
-            gpio_controller.set_state("LOOPING")
-            already_recording = False
-        elif BUTTON_STATE == 'CLEAR_LOOP':
-            # see if can instantly transition back to inactive instead
-            # of clear loop. Or in the first instance of clear loop set
-            # button state to inactive that way. probably better this way
-            # so we arent constantly setting loop to 0 :>
-            loop = 0
-            record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
-            audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
-            gpio_controller.set_state("INACTIVE")
+
+        # Executes GPIO and loop machine logic flow.
+        # TODO: Transfer flow to another process to simplify main() readability.
+        if GPIO_CAPABLE:
+            # Read the state of the button press. 
+            BUTTON_STATE = gpio_controller.update_gpio()
+            # Perform actions dependent on the state of the button press.
+            if BUTTON_STATE == 'INACTIVE':
+                inactive_end_time = time.time()
+            if BUTTON_STATE == 'RECORDING':
+                recording_time = time.time()
+                if not already_recording:
+                    print("Recording audios for 5 segundos")
+                    audio_recorder.play()
+                    already_recording = True
+            elif BUTTON_STATE == 'ACTIVATE_LOOP':
+                loop_len = recording_time - inactive_end_time
+                loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
+                print("ACTIVATING LOOP")
+                gpio_controller.set_state("LOOPING")
+                already_recording = False
+            elif BUTTON_STATE == 'CLEAR_LOOP':
+                loop = 0
+                record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
+                audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
+                gpio_controller.set_state("INACTIVE")
 
 
 if __name__ == "__main__":
