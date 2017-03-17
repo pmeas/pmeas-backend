@@ -4,6 +4,11 @@ import configparser
 import jackserver
 import flanger 
 
+import socket
+
+import bridge
+SOCKET_TIMEOUT = 30 #seconds
+
 def start_pyo_server():
     """Start the Pyo server
     
@@ -121,6 +126,10 @@ def apply_effects( effects_list ):
 
 def main():
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setblocking(0)
+    s.bind(('', 10000))
+
     #jackserver.start_jack_server(2, 1)
 
     pyo_server = start_pyo_server()
@@ -131,14 +140,19 @@ def main():
 
     apply_effects( enabled_effects )
 
-
-    # Eliminate need for GUI with loop - eventually to be used for updating effects.
-    # Will be the location of the socket that will establish connection with GUI
     while True:
+        # Effects have now been loaded from last good configuration
+        # and the modulator is ready, so we'll block and await
+        # await a new configuration. When one arrives, we'll
+        # restart the program
+        res = bridge.backend(s)
+        if res:
+            print(res)
+            enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+            apply_effects(enabled_effects)
+        #print(res)
         time.sleep(1)
 
 
 if __name__ == "__main__":
     main()
-
-    
