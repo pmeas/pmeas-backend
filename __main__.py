@@ -145,8 +145,6 @@ def main():
             print(res)
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects(enabled_effects)
-        else:
-            print("Waiting for comms")
         #print(res)
         time.sleep(1)
 
