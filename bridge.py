@@ -1,4 +1,4 @@
-import json, socket, subprocess, sys, configparser
+import json, socket, subprocess, sys, configparser, jackserver
 
 PORT = 10000
 
@@ -50,7 +50,11 @@ def respond_to_intent(parsed_data):
         return 'Updated_effects'
     elif intent == 'REQPORT':
         # request the ports
-        return 'Port_Data'
+        ports = {}
+        ports['input'] = jackserver.get_clean_inports()
+        ports['output'] = jackserver.get_clean_outports()
+        ports_str = json.dumps(ports)
+        return ports_str
     elif intent == 'UPDATEPORT':
         #update the ports
         return 'Updated_ports'

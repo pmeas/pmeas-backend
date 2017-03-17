@@ -62,3 +62,17 @@ def filter_port_selection(selected_port):
     return "hw:" + str(card_num) + "," + str(device_num)
     #print(str(card_num) + ", " + str(device_num))
 
+def get_clean_inports():
+    """
+    Return the filtered input ports
+    """
+    arecord_res = get_input_devices()
+    return filter_shell_output(arecord_res)
+
+def get_clean_outports():
+    """
+    Return the filtered output ports
+    """
+    aplay_res = get_output_devices()
+    return filter_shell_output(aplay_res)
+
