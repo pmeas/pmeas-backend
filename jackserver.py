@@ -1,7 +1,6 @@
 import subprocess
 
-
-def start_jack_server(hw_in_port=0, hw_out_port=0):
+def start_jack_server(inputport, outputport):
     """
     Start the JACK server.
 
@@ -11,9 +10,7 @@ def start_jack_server(hw_in_port=0, hw_out_port=0):
 
     Called ONLY when no existing JACK server is running on the machine.
     """
-    cmd = 'jackd -P 70 -d alsa -r 48000 -p 1024 -n 2 -D -C hw:{0} -P hw:{1}'.format(hw_in_port, hw_out_port)
-    process = subprocess.call(cmd, shell=True)
-
+    process = subprocess.call('jackd -P 70 -d alsa -r 48000 -p 1024 -n 2 -D -C &' + inputport + '-P ' + outputport, shell=True)
 
 def get_input_devices():
     """List the input devices captured by the ALSA interface"""
@@ -21,13 +18,11 @@ def get_input_devices():
     out, err = process.communicate()
     return out
 
-
 def get_output_devices():
     """List the output devices captured by the ALSA interface"""
     process = subprocess.Popen(['aplay', '-l'], stdout=subprocess.PIPE)
     out, err = process.communicate()
     return out
-
 
 def filter_shell_output(data):
     """
