@@ -2,6 +2,7 @@ import time
 import pyo
 import configparser
 import jackserver
+import socket
 
 import bridge
 SOCKET_TIMEOUT = 30 #seconds
@@ -120,6 +121,10 @@ def apply_effects( effects_list ):
 
 def main():
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.setblocking(0)
+    s.bind(('', 10000))
+
     #jackserver.start_jack_server(2, 1)
 
     pyo_server = start_pyo_server()
@@ -135,8 +140,12 @@ def main():
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
-        res = bridge.backend()
-        print(res)
+        res = bridge.backend(s)
+        if res:
+            print(res)
+        else:
+            print("Waiting for comms")
+        #print(res)
         time.sleep(1)
 
 
