@@ -1,18 +1,14 @@
-import json, os
-
+import json
 
 def read_config_file():
     """
     Reads the configuration file stored in config/
     Returns string being read.
     """
-    effects_file = os.path.join( os.path.dirname(os.path.abspath(__file__)), "config/effects.json")
-
-    config_file = open(effects_file)
+    config_file = open("config/effects.txt")
     config_data = config_file.read()
     config_file.close()
     return config_data
-
 
 def parse_config_file(config_data):
     """
@@ -22,7 +18,6 @@ def parse_config_file(config_data):
     """
     config_data = json.loads(config_data)
     return config_data
-
 
 def get_effects():
     """
