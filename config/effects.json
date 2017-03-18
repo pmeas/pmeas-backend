@@ -1,13 +1,1 @@
-{
-	"volume": {
-		"vol": 0.5
-	},	
-	"distortion": {
-		"drive": 0.9,
-		"slope": 0.2
-	},
-	"delay": {
-		"delay": 0.5,
-		"feedback": 0.5
-	}
-}
+{"delay": {"delay": 1, "feedback": 0.5}}
