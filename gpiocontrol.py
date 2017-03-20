@@ -68,7 +68,7 @@ class GpioController:
 
     def change_state(self):
         """Change the state of the loop machine dependent on before state"""
-        if self.BUTTON_STATE == 'INACTIVE':
+        if self.BUTTON_STATE == 'INACTIVE' or self.BUTTON_STATE == 'LOOPING':
             self.BUTTON_STATE = 'RECORDING'
         elif self.BUTTON_STATE == 'RECORDING':
             self.BUTTON_STATE = 'ACTIVATE_LOOP'
