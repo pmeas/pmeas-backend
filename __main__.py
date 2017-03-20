@@ -153,8 +153,11 @@ def main():
     apply_effects( enabled_effects )
 
     # Create necessary variables used by the GPIO controller module
-    record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
-    audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
+    record_table = []
+    audio_recorder = []
+    loop = []
+    record_table.append(pyo.NewTable(length=60, chnls=1, feedback=0.5))
+    audio_recorder.append(pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table[-1], fadetime=0.05))
     already_recording = False
     recording_time = 0
     inactive_end_time = 0
@@ -182,18 +185,20 @@ def main():
                 recording_time = time.time()
                 if not already_recording:
                     print("Recording audios for 5 segundos")
-                    audio_recorder.play()
+                    (audio_recorder[-1]).play()
                     already_recording = True
             elif BUTTON_STATE == 'ACTIVATE_LOOP':
                 loop_len = recording_time - inactive_end_time
-                loop = pyo.Looper(table=record_table, dur=loop_len, mul=1).out()
+                loop.append(pyo.Looper(table=record_table[-1], dur=loop_len, mul=1).out())
                 print("ACTIVATING LOOP")
                 gpio_controller.set_state("LOOPING")
                 already_recording = False
             elif BUTTON_STATE == 'CLEAR_LOOP':
-                loop = 0
-                record_table = pyo.NewTable(length=60, chnls=1, feedback=0.5)
-                audio_recorder = pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table, fadetime=0.05)
+                loop = []
+                record_table = []
+                audio_recorder = []
+                record_table.append(pyo.NewTable(length=60, chnls=1, feedback=0.5))
+                audio_recorder.append(pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table[-1], fadetime=0.05))
                 gpio_controller.set_state("INACTIVE")
 
 
