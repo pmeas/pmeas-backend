@@ -189,9 +189,24 @@ def main():
                     already_recording = True
             elif BUTTON_STATE == 'ACTIVATE_LOOP':
                 loop_len = recording_time - inactive_end_time
-                loop.append(pyo.Looper(table=record_table[-1], dur=loop_len, mul=1).out())
-                record_table.append(pyo.NewTable(length=60, chnls=1, feedback=0.5))
-                audio_recorder.append(pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table[-1], fadetime=0.05))
+                loop.append(
+                    pyo.Looper(
+                        table=record_table[-1],
+                        dur=loop_len,
+                        mul=1).out()
+                    )
+                record_table.append(
+                    pyo.NewTable(
+                        length=60,
+                        chnls=1,
+                        feedback=0.5)
+                    )
+                audio_recorder.append(
+                    pyo.TableRec(
+                        (enabled_effects[len(enabled_effects) - 1]),
+                        table=record_table[-1],
+                        fadetime=0.05)
+                    )
                 print("ACTIVATING LOOP")
                 gpio_controller.set_state("LOOPING")
                 already_recording = False
@@ -199,8 +214,18 @@ def main():
                 loop = []
                 record_table = []
                 audio_recorder = []
-                record_table.append(pyo.NewTable(length=60, chnls=1, feedback=0.5))
-                audio_recorder.append(pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table[-1], fadetime=0.05))
+                record_table.append(
+                    pyo.NewTable(
+                        length=60,
+                        chnls=1,
+                        feedback=0.5)
+                    )
+                audio_recorder.append(
+                    pyo.TableRec(
+                        (enabled_effects[len(enabled_effects) - 1]),
+                        table=record_table[-1],
+                        fadetime=0.05)
+                    )
                 gpio_controller.set_state("INACTIVE")
 
 
