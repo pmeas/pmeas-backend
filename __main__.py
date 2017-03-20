@@ -5,6 +5,7 @@ import time
 import pyo
 try:
     import RPi.GPIO as GPIO
+    GPIO_CAPABLE = True
 except ImportError:
     pass
 
@@ -13,7 +14,6 @@ if GPIO_CAPABLE:
 import bridge
 import configparser
 import jackserver
-
 
 SOCKET_TIMEOUT = 30 #seconds
 

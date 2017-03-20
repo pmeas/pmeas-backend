@@ -20,7 +20,6 @@ class GpioController:
     time_pressed -- How long the button has been pressed for.
     button_held -- If the button has been held for 3 seconds (indicating clear of loop intent)
     """
-
     def __init__(self):
         self.button_pressed = False
         self.BUTTON_STATE = 'INACTIVE'
@@ -29,12 +28,12 @@ class GpioController:
         self.button_held = False
 
     def update_gpio(self):
-    """
-    Update the state of the loop machine based on whether or not the
-    button is being pressed.
+        """
+        Update the state of the loop machine based on whether or not the
+        button is being pressed.
 
-    Return the state of the loop machine as BUTTON_STATE
-    """
+        Return the state of the loop machine as BUTTON_STATE
+        """
         pin_state = GPIO.input(17)
 
         # If the button is being pressed, set the pressed variable and
