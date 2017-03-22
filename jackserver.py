@@ -1,7 +1,7 @@
 import subprocess
 
 
-def start_jack_server(hw_in_port=0, hw_out_port=0):
+def start_jack_server(hw_in_port='0', hw_out_port='0'):
     """
     Start the JACK server.
 
@@ -11,7 +11,7 @@ def start_jack_server(hw_in_port=0, hw_out_port=0):
 
     Called ONLY when no existing JACK server is running on the machine.
     """
-    cmd = 'jackd -P 70 -d alsa -r 48000 -p 1024 -n 2 -D -C hw:{0} -P hw:{1}'.format(hw_in_port, hw_out_port)
+    cmd = 'jackd -P 70 -d alsa -r 48000 -p 1024 -n 3 -D -C hw:{0} -P hw:{1} &'.format(hw_in_port, hw_out_port)
     process = subprocess.call(cmd, shell=True)
 
 

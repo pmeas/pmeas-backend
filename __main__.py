@@ -130,7 +130,9 @@ def main():
     s.setblocking(0)
     s.bind(('', 10000))
 
-    #jackserver.start_jack_server(2, 1)
+    jackserver.start_jack_server('1,0', '0,0')
+
+    time.sleep(2)
 
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
