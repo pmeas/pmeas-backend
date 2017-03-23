@@ -1,6 +1,6 @@
-#! /bin/sh
+#!/bin/sh
 
-$PATH = "/home/pi/School/pmeas/pmeas-backend"
+OH_NO='/home/zhijazi/School/pmeas/pmeas-backend'
 
-python $PATH &
+python $OH_NO &>"$OH_NO/log.txt" 2>"$OH_NO/err.txt"
 
