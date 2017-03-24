@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import time
 import pyo
 import configparser
@@ -132,7 +134,7 @@ def main():
 
     jackserver.start_jack_server('1,0', '0,0')
 
-    time.sleep(2)
+    time.sleep(5)
 
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
