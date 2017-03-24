@@ -126,9 +126,11 @@ def apply_effects( effects_list ):
 
 def main():
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #UDP SOCKET
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
     s.setblocking(0)
     s.bind(('', 10000))
+    sock.bind(('', 10001))
 
     #jackserver.start_jack_server(2, 1)
 
