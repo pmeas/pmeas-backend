@@ -28,7 +28,8 @@ def backend(s):
     #receive 1 byte message and send back to frontend
     data, wherefrom = s.recvfrom(1024)
     parsed_data = configparser.parse_json_data(data)
-    if (parsed_data == "1")
+    message = parsed_data.pop('1', None) #Not sure needed, will test to confirm
+    if (message == "1")
         s.sendto(parsed_data, wherefrom)
 
     #TCP socket listens for frontend TCP socket to be created
