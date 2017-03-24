@@ -1,6 +1,6 @@
 import json, socket, subprocess, sys, configparser, jackserver
 
-PORT = 10000
+UDP_PORT = 10000
 TCP_PORT = 10001
 
 #TODO add ability for backend to send audio interfaces to frontend
@@ -20,29 +20,36 @@ def backend(s):
     #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #s.setblocking(0)
-    #s.bind(('', PORT))
+    #s.bind(('', UDP_PORT))
     #sock.bind(('', TCP_PORT))
 
-    sock.listen(1)
-    c, addr = sock.accept()
-        while True:
-           data = c.recvfrom(1024)
-                if not data:
-                    break
-                c.send(data)
-        c.close()
-
     response = None
-    try:
-        data, wherefrom = s.recvfrom(1024)
-        parsed_data = configparser.parse_json_data(data)
+    if (s.recvfrom == "1")
+        sock.listen(1)
+        c, addr = sock.accept()
+           while True:
+               data, wherefrom = sock.recvfrom(1024)
+               parsed_data = configparser.parse_json_data(data)
+               response = respond_to_intent(parsed_data)
+               sock.sendto(response, wherefrom)
+                   if not data:
+                       break
+               c.send(data)
+        c.close()
+    else
+        return response
 
-        response = respond_to_intent(parsed_data)
-
-        s.sendto(response, wherefrom)
-    except socket.error:
-        pass
-    return response
+#    response = None
+#    try:
+#        data, wherefrom = s.recvfrom(1024)
+#        parsed_data = configparser.parse_json_data(data)
+#
+#        response = respond_to_intent(parsed_data)
+#
+#        s.sendto(response, wherefrom)
+#    except socket.error:
+#        pass
+#    return response
 
 def respond_to_intent(parsed_data):
     """
