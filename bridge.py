@@ -24,18 +24,26 @@ def backend(s):
     #sock.bind(('', TCP_PORT))
 
     response = None
-    if (s.recvfrom == "1")
-        sock.listen(1)
-        c, addr = sock.accept()
-           while True:
-               data, wherefrom = sock.recvfrom(1024)
-               parsed_data = configparser.parse_json_data(data)
-               response = respond_to_intent(parsed_data)
-               sock.sendto(response, wherefrom)
-                   if not data:
-                       break
-               c.send(data)
-        c.close()
+
+    #receive 1 byte message and send back to frontend
+    data, wherefrom = s.recvfrom(1024)
+    parsed_data = configparser.parse_json_data(data)
+    if (parsed_data == "1")
+        s.sendto(parsed_data, wherefrom)
+
+    #TCP socket listens for frontend TCP socket to be created
+    #then initiates TCP server that receieves JSON data
+    sock.listen(1)
+    c, addr = sock.accept()
+       while True:
+           data, wherefrom = sock.recvfrom(1024)
+           parsed_data = configparser.parse_json_data(data)
+           response = respond_to_intent(parsed_data)
+           sock.sendto(response, wherefrom)
+               if not data:
+                   break
+           c.send(data)
+    c.close()
     else
         return response
 
