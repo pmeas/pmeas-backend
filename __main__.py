@@ -21,7 +21,7 @@ def start_pyo_server():
 
 
 def chain_effects( initial_source, config_effects_dict ):
-    main_volume = 0.5 #default volume 
+    main_volume = 1 #default volume 
     enabled_effects = [initial_source]
     for effect in sorted(config_effects_dict.keys()):
 
@@ -126,9 +126,14 @@ def apply_effects( effects_list ):
 
 def main():
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    bridge_conn = bridge.Bridge()
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #UDP SOCKET
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
     s.setblocking(0)
+    sock.setblocking(0)
     s.bind(('', 10000))
+    sock.bind(('', 10001))
 
     #jackserver.start_jack_server(2, 1)
 
@@ -145,7 +150,7 @@ def main():
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
-        res = bridge.backend(s)
+        res = bridge_conn.backend(s,sock)
         if res:
             print(res)
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
