@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import time
 import pyo
 import configparser
@@ -135,7 +137,9 @@ def main():
     s.bind(('', 10000))
     sock.bind(('', 10001))
 
-    #jackserver.start_jack_server(2, 1)
+    jackserver.start_jack_server('1,0', '0,0')
+
+    time.sleep(5)
 
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
