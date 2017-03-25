@@ -1,1 +1,1 @@
-{"delay": {"delay": 1, "feedback": 0.5}}
+{"distortion": {"slope": 0.5, "drive": 1}}

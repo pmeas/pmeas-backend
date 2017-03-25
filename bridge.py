@@ -5,7 +5,7 @@ TCP_PORT = 10001
 
 #TODO add ability for backend to send audio interfaces to frontend
 
-def backend(s):
+def backend(s,sock):
     """
     Handle the network communications between the GUI and this
     application.
@@ -13,7 +13,8 @@ def backend(s):
     Begins by initiating a UDP server to listen for connections to
     send to a TCP server for reliable communications.
 
-    s -- Socket information sent by the main process.
+    s -- UDP Socket information sent by the main process.
+    sock -- TCP Socket information sent by the main process.
 
     Return the response sent to the GUI by the server.
     """
@@ -22,44 +23,49 @@ def backend(s):
     #s.setblocking(0)
     #s.bind(('', UDP_PORT))
     #sock.bind(('', TCP_PORT))
-
+    
     response = None
-
     #receive 1 byte message and send back to frontend
-    data, wherefrom = s.recvfrom(1024)
-    parsed_data = configparser.parse_json_data(data)
-    message = parsed_data.pop('1', None) #Not sure needed, will test to confirm
-    if (message == "1")
-        s.sendto(parsed_data, wherefrom)
-
+    try:
+        data, wherefrom = s.recvfrom(1024)
+        parsed_data = configparser.parse_json_data(data)
+	parsed_data = str(parsed_data)
+        if parsed_data == "1":
+            s.sendto(str(TCP_PORT), wherefrom)
+    except socket.error:
+        pass
+    return response
+    """
     #TCP socket listens for frontend TCP socket to be created
     #then initiates TCP server that receieves JSON data
     sock.listen(1)
-    c, addr = sock.accept()
-       while True:
-           data, wherefrom = sock.recvfrom(1024)
-           parsed_data = configparser.parse_json_data(data)
-           response = respond_to_intent(parsed_data)
-           sock.sendto(response, wherefrom)
-               if not data:
-                   break
-           c.send(data)
-    c.close()
-    else
-        return response
+    try:
+        c, addr = sock.accept()
+        while True:
+            data, wherefrom = sock.recvfrom(1024)
+            parsed_data = configparser.parse_json_data(data)
+            response = respond_to_intent(parsed_data)
+            sock.sendto(response, wherefrom)
+            if not data:
+                break
+            c.send(data)
+        c.close()
+    except socket.error:
+        pass
+    return response
+    
+    response = None
+    try:
+        data, wherefrom = s.recvfrom(1024)
+        parsed_data = configparser.parse_json_data(data)
 
-#    response = None
-#    try:
-#        data, wherefrom = s.recvfrom(1024)
-#        parsed_data = configparser.parse_json_data(data)
-#
-#        response = respond_to_intent(parsed_data)
-#
-#        s.sendto(response, wherefrom)
-#    except socket.error:
-#        pass
-#    return response
+        response = respond_to_intent(parsed_data)
 
+        s.sendto(response, wherefrom)
+    except socket.error:
+        pass
+    return response
+    """
 def respond_to_intent(parsed_data):
     """
     Determine what action the GUI intends to perform.
