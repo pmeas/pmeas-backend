@@ -134,8 +134,8 @@ def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
     s.setblocking(0)
     sock.setblocking(0)
-    s.bind(('', 10000))
-    sock.bind(('', 10001))
+    s.bind((s.gethostname(), 10000))
+    sock.bind((sock.gethostname(), 10001))
 
     jackserver.start_jack_server('1,0', '0,0')
 
