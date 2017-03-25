@@ -23,7 +23,7 @@ def start_pyo_server():
 def chain_effects( initial_source, config_effects_dict ):
     main_volume = 0.5 #default volume 
     enabled_effects = [initial_source]
-    for effect in config_effects_dict.keys():
+    for effect in sorted(config_effects_dict.keys()):
 
         source = enabled_effects[len(enabled_effects) - 1]
 
@@ -34,7 +34,7 @@ def chain_effects( initial_source, config_effects_dict ):
             print("Volume captured")
             main_volume=float(params['vol'])
 
-	elif effect == 'distortion':
+        elif params['name'] == 'distortion':
             # distortion stuff
             print("Enable distortion effect")
             enabled_effects.append(pyo.Disto(
@@ -45,7 +45,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'delay':
+        elif params['name'] == 'delay':
             # delay stuff
             print("Enable delay effect")
             enabled_effects.append(pyo.Delay(
@@ -57,7 +57,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'reverb':
+        elif params['name'] == 'reverb':
             # reverb stuff
             print("Enable reverb effect")
             enabled_effects.append(pyo.STRev(
@@ -71,7 +71,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'chorus':
+        elif params['name'] == 'chorus':
             # chorus stuff
             print("Enable chorus effect")
             enabled_effects.append(pyo.Chorus(
@@ -83,7 +83,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'flanger':
+        elif params['name'] == 'flanger':
             # flanger stuff
             print("Enable flanger effect")
             enabled_effects.append(flanger.Flanger(
@@ -95,7 +95,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'freqshift':
+        elif params['name'] == 'freqshift':
             # frequency shift stuff
             print("Enable frequency shift effect")
             enabled_effects.append(pyo.FreqShift(
@@ -105,7 +105,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'harmonizer':
+        elif params['name'] == 'harmonizer':
             # harmonizer stuff
             print("Enable harmonizer effect")
             enabled_effects.append(pyo.Harmonizer(
