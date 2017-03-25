@@ -24,7 +24,8 @@ fi
 if [ "" == "$JACK_PKG_INSTALLED" ]
 then
     echo "Could not find JACK installation. Installing JACK."
-    # Code to install JACK
+    # An issue here is that JACK for the PI uses a patched version of JACK and not from def. repository.
+    sudo apt-get --force-yes --yes install jackd
     echo "[OK]"
 fi
 
@@ -32,6 +33,7 @@ fi
 if [ "" == "$PYO_PKG_INSTALLED" ]
 then
     echo "Could not find Pyo installation. Installing Pyo."
+    sudo apt-get --force-yes --yes install python-pyo
     # Code to install Pyo here
     echo "[OK]"
 fi
