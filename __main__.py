@@ -21,7 +21,7 @@ def start_pyo_server():
 
 
 def chain_effects( initial_source, config_effects_dict ):
-    main_volume = 0.5 #default volume 
+    main_volume = 1 #default volume 
     enabled_effects = [initial_source]
     for effect in sorted(config_effects_dict.keys()):
 
