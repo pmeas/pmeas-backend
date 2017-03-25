@@ -35,10 +35,11 @@ def backend(s,sock):
     except socket.error:
         pass
     return response
-    """
+    
     #TCP socket listens for frontend TCP socket to be created
     #then initiates TCP server that receieves JSON data
     sock.listen(1)
+    
     try:
         c, addr = sock.accept()
         while True:
@@ -53,7 +54,7 @@ def backend(s,sock):
     except socket.error:
         pass
     return response
-    
+    """
     response = None
     try:
         data, wherefrom = s.recvfrom(1024)
