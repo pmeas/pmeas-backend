@@ -126,6 +126,8 @@ def apply_effects( effects_list ):
 
 def main():
 
+    bridge_conn = bridge.Bridge()
+
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #UDP SOCKET
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
     s.setblocking(0)
@@ -148,7 +150,7 @@ def main():
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
-        res = bridge.backend(s,sock)
+        res = bridge_conn.backend(s,sock)
         if res:
             print(res)
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
