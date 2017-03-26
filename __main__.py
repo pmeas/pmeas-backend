@@ -138,7 +138,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jackserver.start_jack_server('3,0', '1,0')
+    jackserver.start_jack_server('3,0', '0,3')
 
     time.sleep(5)
 

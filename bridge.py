@@ -31,13 +31,14 @@ class Bridge:
         
         response = None
         #receive 1 byte message and send back to frontend
-        try:
-            data, wherefrom = s.recvfrom(1024)
-            if data == "1":
-                print("Got a 1")
-                s.sendto(str(TCP_PORT), wherefrom)
-        except socket.error:
-            pass
+        if not self.TCP_CONN:
+            try:
+                data, wherefrom = s.recvfrom(1024)
+                if data == "1":
+                    print("Got a 1")
+                    s.sendto(str(TCP_PORT), wherefrom)
+            except socket.error:
+                pass
         
         #TCP socket listens for frontend TCP socket to be created
         #then initiates TCP server that receieves JSON data
@@ -52,14 +53,19 @@ class Bridge:
             except socket.error:
                 return
         
-        try:
-            data = self.c.recv(1024)
-            print("Received data!" + data)
-            parsed_data = configparser.parse_json_data(data)
-            response = self.respond_to_intent(parsed_data)
-            self.c.send(response)
-        except socket.error as error:
-            print("Caught an error" + str(error))
+        if self.TCP_CONN:
+            try:
+                data = self.c.recv(1024)
+                print("Received data!" + data)
+                parsed_data = configparser.parse_json_data(data)
+                response = self.respond_to_intent(parsed_data)
+                self.c.send(response)
+            except socket.error as error:
+                print("Caught an error" + str(error))
+            except ValueError:
+                self.TCP_CONN = False
+                pass
+
         return response
         """
         response = None
