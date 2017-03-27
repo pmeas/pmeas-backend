@@ -1,8 +1,15 @@
+#!/usr/bin/python
+
 import time
 import pyo
 import configparser
 import jackserver
 import flanger 
+
+import socket
+
+import bridge
+SOCKET_TIMEOUT = 30 #seconds
 
 def start_pyo_server():
     """Start the Pyo server
@@ -16,9 +23,9 @@ def start_pyo_server():
 
 
 def chain_effects( initial_source, config_effects_dict ):
-    main_volume = 0.5 #default volume 
+    main_volume = 1 #default volume 
     enabled_effects = [initial_source]
-    for effect in config_effects_dict.keys():
+    for effect in sorted(config_effects_dict.keys()):
 
         source = enabled_effects[len(enabled_effects) - 1]
 
@@ -29,7 +36,7 @@ def chain_effects( initial_source, config_effects_dict ):
             print("Volume captured")
             main_volume=float(params['vol'])
 
-	elif effect == 'distortion':
+        elif params['name'] == 'distortion':
             # distortion stuff
             print("Enable distortion effect")
             enabled_effects.append(pyo.Disto(
@@ -40,7 +47,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'delay':
+        elif params['name'] == 'delay':
             # delay stuff
             print("Enable delay effect")
             enabled_effects.append(pyo.Delay(
@@ -52,7 +59,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'reverb':
+        elif params['name'] == 'reverb':
             # reverb stuff
             print("Enable reverb effect")
             enabled_effects.append(pyo.STRev(
@@ -66,7 +73,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'chorus':
+        elif params['name'] == 'chorus':
             # chorus stuff
             print("Enable chorus effect")
             enabled_effects.append(pyo.Chorus(
@@ -78,7 +85,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'flanger':
+        elif params['name'] == 'flanger':
             # flanger stuff
             print("Enable flanger effect")
             enabled_effects.append(flanger.Flanger(
@@ -90,7 +97,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'freqshift':
+        elif params['name'] == 'freqshift':
             # frequency shift stuff
             print("Enable frequency shift effect")
             enabled_effects.append(pyo.FreqShift(
@@ -100,7 +107,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
-        elif effect == 'harmonizer':
+        elif params['name'] == 'harmonizer':
             # harmonizer stuff
             print("Enable harmonizer effect")
             enabled_effects.append(pyo.Harmonizer(
@@ -121,7 +128,19 @@ def apply_effects( effects_list ):
 
 def main():
 
-    #jackserver.start_jack_server(2, 1)
+    bridge_conn = bridge.Bridge()
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #UDP SOCKET
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
+    s.setblocking(0)
+    sock.setblocking(0)
+    s.bind(('', 10000))
+    sock.bind(('', 10001))
+
+    # Add your own input and output ports here for now
+    jackserver.start_jack_server('3,0', '0,3')
+
+    time.sleep(5)
 
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
@@ -131,14 +150,19 @@ def main():
 
     apply_effects( enabled_effects )
 
-
-    # Eliminate need for GUI with loop - eventually to be used for updating effects.
-    # Will be the location of the socket that will establish connection with GUI
     while True:
+        # Effects have now been loaded from last good configuration
+        # and the modulator is ready, so we'll block and await
+        # await a new configuration. When one arrives, we'll
+        # restart the program
+        res = bridge_conn.backend(s,sock)
+        if res:
+            print(res)
+            enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+            apply_effects(enabled_effects)
+        #print(res)
         time.sleep(1)
 
 
 if __name__ == "__main__":
     main()
-
-    
