@@ -119,6 +119,20 @@ def chain_effects( initial_source, config_effects_dict ):
                 add=0)
             )
 
+        elif params['name'] == 'phaser':
+            # phaser stuff
+            print("Enable phaser effect")
+            enabled_effects.append(pyo.Phaser(
+                source,
+                freq=float(params['frequency']),
+                spread=float(params['spread']),
+                q=float(params['q']),
+                feedback=float(params['feedback']),
+                num=int(params['num']),
+                mul=main_volume,
+                add=0)
+            )
+
     return enabled_effects
 
 
@@ -138,7 +152,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jackserver.start_jack_server('3,0', '0,3')
+    jackserver.start_jack_server('3,0', '1,0')
 
     time.sleep(5)
 
