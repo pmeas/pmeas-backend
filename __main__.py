@@ -173,7 +173,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jackserver.start_jack_server('3,0', '1,0')
+    jackserver.start_jack_server('1,0', '0,1')
 
     time.sleep(5)
 
@@ -223,7 +223,7 @@ def main():
                 loop.append(
                     pyo.Looper(
                         table=record_table[-1],
-                        dur=loop_len,
+                        dur=loop_len, xfade=0,
                         mul=1).out()
                     )
                 record_table.append(
@@ -265,7 +265,7 @@ def main():
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects(enabled_effects)
         #print(res)
-        time.sleep(0.05)
+        time.sleep(0.0001)
 
 
 if __name__ == "__main__":
