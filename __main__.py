@@ -1,15 +1,29 @@
 #!/usr/bin/python
 
+GPIO_CAPABLE = False
+
 import time
+
 import pyo
+try:
+    import RPi.GPIO as GPIO
+    GPIO_CAPABLE = True
+except ImportError:
+    pass
+
+if GPIO_CAPABLE:
+    import gpiocontrol
+import bridge
 import configparser
 import jackserver
 import flanger 
 
 import socket
 
-import bridge
 SOCKET_TIMEOUT = 30 #seconds
+
+button_pin = 17
+
 
 def start_pyo_server():
     """Start the Pyo server
@@ -139,8 +153,15 @@ def chain_effects( initial_source, config_effects_dict ):
 def apply_effects( effects_list ):
     effects_list[len(effects_list) - 1].out()
 
-
 def main():
+
+    # If GPIO is enabled, initialize the pins and GPIO module.
+    if GPIO_CAPABLE:
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
+
+        gpio_controller = gpiocontrol.GpioController()
 
     bridge_conn = bridge.Bridge()
 
@@ -152,30 +173,99 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jackserver.start_jack_server('3,0', '1,0')
+    jackserver.start_jack_server('1,0', '0,1')
 
     time.sleep(5)
 
+    # JACK and Pyo set up procedures
+    #jackserver.start_jack_server(2, 1)
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
-    # Read input from the audio device on channel 1
+    # Read input from the audio device on channel 0
+    # and apply the necessary effects from the config file 
     enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-
     apply_effects( enabled_effects )
+
+    # Create necessary variables used by the GPIO controller module
+    record_table = []
+    audio_recorder = []
+    loop = []
+    record_table.append(pyo.NewTable(length=60, chnls=1, feedback=0.5))
+    audio_recorder.append(pyo.TableRec((enabled_effects[len(enabled_effects) - 1]), table=record_table[-1], fadetime=0.05))
+    already_recording = False
+    recording_time = 0
+    inactive_end_time = 0
 
     while True:
         # Effects have now been loaded from last good configuration
         # and the modulator is ready, so we'll block and await
         # await a new configuration. When one arrives, we'll
         # restart the program
+        # TODO: Check the result of res to see if we should update effects.
+
+        # Executes GPIO and loop machine logic flow.
+        # TODO: Transfer flow to another process to simplify main() readability.
+        if GPIO_CAPABLE:
+            # Read the state of the button press. 
+            BUTTON_STATE = gpio_controller.update_gpio()
+            # Perform actions dependent on the state of the button press.
+            if BUTTON_STATE == 'INACTIVE' or BUTTON_STATE == 'LOOPING':
+                inactive_end_time = time.time()
+            if BUTTON_STATE == 'RECORDING':
+                recording_time = time.time()
+                if not already_recording:
+                    print("Recording audios for 5 segundos")
+                    (audio_recorder[-1]).play()
+                    already_recording = True
+            elif BUTTON_STATE == 'ACTIVATE_LOOP':
+                loop_len = recording_time - inactive_end_time
+                loop.append(
+                    pyo.Looper(
+                        table=record_table[-1],
+                        dur=loop_len, xfade=0,
+                        mul=1).out()
+                    )
+                record_table.append(
+                    pyo.NewTable(
+                        length=60,
+                        chnls=1,
+                        feedback=0.5)
+                    )
+                audio_recorder.append(
+                    pyo.TableRec(
+                        (enabled_effects[len(enabled_effects) - 1]),
+                        table=record_table[-1],
+                        fadetime=0.05)
+                    )
+                print("ACTIVATING LOOP")
+                gpio_controller.set_state("LOOPING")
+                already_recording = False
+            elif BUTTON_STATE == 'CLEAR_LOOP':
+                loop = []
+                record_table = []
+                audio_recorder = []
+                record_table.append(
+                    pyo.NewTable(
+                        length=60,
+                        chnls=1,
+                        feedback=0.5)
+                    )
+                audio_recorder.append(
+                    pyo.TableRec(
+                        (enabled_effects[len(enabled_effects) - 1]),
+                        table=record_table[-1],
+                        fadetime=0.05)
+                    )
+                gpio_controller.set_state("INACTIVE")
+
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects(enabled_effects)
         #print(res)
-        time.sleep(1)
+        time.sleep(0.0001)
 
 
 if __name__ == "__main__":
