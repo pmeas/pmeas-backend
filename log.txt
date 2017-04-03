@@ -1,0 +1,14 @@
+jackdmp 1.9.10
+Copyright 2001-2005 Paul Davis and others.
+Copyright 2004-2014 Grame.
+jackdmp comes with ABSOLUTELY NO WARRANTY
+This is free software, and you are welcome to redistribute it
+under certain conditions; see the file COPYING for details
+JACK server starting in realtime mode with priority 70
+self-connect-mode is "Don't restrict self connect requests"
+creating alsa driver ... hw:0,1|hw:1,0|512|4|48000|0|0|nomon|swmeter|-|32bit
+configuring for 48000Hz, period = 512 frames (10.7 ms), buffer = 4 periods
+ALSA: final selected sample format for capture: 16bit little-endian
+ALSA: use 4 periods for capture
+ALSA: final selected sample format for playback: 16bit little-endian
+ALSA: use 4 periods for playback
