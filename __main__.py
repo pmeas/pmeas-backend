@@ -262,6 +262,7 @@ def main():
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
+            enabled_effects[-1].stop()
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects(enabled_effects)
         #print(res)
