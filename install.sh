@@ -20,12 +20,16 @@ then
     echo "[OK]"
 fi
 
-# Check for successful JACK installation. If not, force install.
-if [ "" == "$JACK_PKG_INSTALLED" ]
+if [ "-nojack" == "$1" ]
 then
-    echo "Could not find JACK installation. Installing JACK."
-    # An issue here is that JACK for the PI uses a patched version of JACK and not from def. repository.
-    sudo apt-get --force-yes --yes install jackd
+    echo "nojack option enabled. Do not re-install jack"
+else
+    echo "Installing patched JACK."
+    sudo apt-get --force-yes --yes remove jackd
+    wget -O - http://rpi.autostatic.com/autostatic.gpg.key| sudo apt-key add -
+    sudo wget -O /etc/apt/sources.list.d/autostatic-audio-raspbian.list http://rpi.autostatic.com/autostatic-audio-raspbian.list
+    sudo apt-get update
+    sudo apt-get --no-install-recommends --force-yes --yes install jackd
     echo "[OK]"
 fi
 
