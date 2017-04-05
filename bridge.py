@@ -106,7 +106,7 @@ class Bridge:
             return ports_str
         elif intent == 'UPDATEPORT':
             #update the ports
-            return 'Updated_ports'
+            return ('update_ports', parsed_data['in'], parsed_data['out'])
         else:
             return 'NO_INTENT'
         

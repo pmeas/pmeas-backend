@@ -265,12 +265,12 @@ def main():
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
-            if 'Updated_ports' in res:
+            if 'update_ports' in res:
                 print("Request to update ports")
                 pyo_server.shutdown()
                 jackserver.stop_jack_server(jack_id)
                 time.sleep(2)
-                jackserver.start_jack_server("3,0", "1,0")
+                jackserver.start_jack_server(res[1], res[2])
                 time.sleep(2)
                 pyo_server = start_pyo_server()
                 enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
