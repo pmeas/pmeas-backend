@@ -15,4 +15,10 @@ class Flanger(PyoObject):
         self._flanger = Interp(fader, self._dls, mul=mul, add=add)
         self._base_objs = self._flanger.getBaseObjects()
 
+    def play(self, dur=0, delay=0):
+        self._modamp.play(dur, delay)
+        self._mod.play(dur, delay)
+        self._dls.play(dur, delay)
+        return PyoObject.play(self, dur, delay)
+
 	
