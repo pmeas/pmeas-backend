@@ -21,4 +21,9 @@ class Flanger(PyoObject):
         self._dls.play(dur, delay)
         return PyoObject.play(self, dur, delay)
 
+    def stop(self):
+        self._modamp.stop()
+        self._mod.stop()
+        self._dls.stop()
+        return PyoObject.stop(self)
 	
