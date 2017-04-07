@@ -2,5 +2,5 @@
 
 #OH_NO='/home/pi/School/pmeas/pmeas-backend'
 #cd /home/pi/School/pmeas/pmeas-backend
-python . 
+python /home/pi/School/pmeas/pmeas-backend &
 
