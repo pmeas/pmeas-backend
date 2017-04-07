@@ -32,5 +32,10 @@ fi
 echo "Setting up systemd service"
 printf "[Unit]\nDescription=PMEAS Audio System\n\n[Service]\nType=forking\nExecStart=/bin/bash $PWD/pmeas.sh\nRestart=on-abort\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/pmeas.service
 sudo systemctl enable pmeas.service
+printf "Systemd service successfully registered\n"
+
+printf "Creating bash startup script\n"
+printf "#/bin/bash\n\npython $PWD &" > pmeas.sh
+printf "Bash script successfully created\n"
 
 echo "Installation complete. PMEAS Ready for use."
