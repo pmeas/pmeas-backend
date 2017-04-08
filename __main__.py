@@ -176,7 +176,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('3,0', '0,3')
+    jack_id = jackserver.start_jack_server('1,0', '0,0')
 
     time.sleep(5)
 
@@ -265,7 +265,7 @@ def main():
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
-            if 'update_ports' in res:
+            if 'UPDATEPORT' == res[0]:
                 print("Request to update ports")
                 pyo_server.shutdown()
                 jackserver.stop_jack_server(jack_id)
@@ -273,11 +273,8 @@ def main():
                 jackserver.start_jack_server(res[1], res[2])
                 time.sleep(2)
                 pyo_server = start_pyo_server()
-                enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-                apply_effects( enabled_effects )
-            else:
-                enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-                apply_effects(enabled_effects)
+        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+        apply_effects( enabled_effects )
         #print(res)
         time.sleep(0.0001)
 

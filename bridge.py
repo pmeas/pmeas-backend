@@ -59,7 +59,8 @@ class Bridge:
                 print("Received data!" + data)
                 parsed_data = configparser.parse_json_data(data)
                 response = self.respond_to_intent(parsed_data)
-                self.c.send(response)
+                print('Responding: ', response[0])
+                self.c.send(response[0])
             except socket.error as error:
                 print("Caught an error" + str(error))
             except ValueError:
@@ -75,7 +76,7 @@ class Bridge:
 
             response = respond_to_intent(parsed_data)
 
-            s.sendto(response, wherefrom)
+            s.sendto(response[0], wherefrom)
         except socket.error:
             pass
         return response
@@ -96,19 +97,19 @@ class Bridge:
         if intent == 'EFFECT':
             # update the effects
             configparser.update_config_file(parsed_data)
-            return 'Updated_effects'
+            return (intent,)
         elif intent == 'REQPORT':
             # request the ports
             ports = {}
             ports['input'] = jackserver.get_clean_inports()
             ports['output'] = jackserver.get_clean_outports()
             ports_str = json.dumps(ports)
-            return ports_str
+            return (intent, ports_str)
         elif intent == 'UPDATEPORT':
             #update the ports
-            return ('update_ports', parsed_data['in'], parsed_data['out'])
+            return (intent, parsed_data['in'], parsed_data['out'])
         else:
-            return 'NO_INTENT'
+            return ()
         
 if __name__ == '__main__':
     #USAGE bridge <frontend|backend>
