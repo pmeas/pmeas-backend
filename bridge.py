@@ -59,8 +59,7 @@ class Bridge:
                 print("Received data!" + data)
                 parsed_data = configparser.parse_json_data(data)
                 response = self.respond_to_intent(parsed_data)
-                print('Responding: ', response[0])
-                self.c.send(response[0])
+                self.c.send(response[1])
             except socket.error as error:
                 print("Caught an error" + str(error))
             except ValueError:
@@ -76,7 +75,7 @@ class Bridge:
 
             response = respond_to_intent(parsed_data)
 
-            s.sendto(response[0], wherefrom)
+            s.sendto(response, wherefrom)
         except socket.error:
             pass
         return response

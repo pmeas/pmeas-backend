@@ -273,8 +273,8 @@ def main():
                 jackserver.start_jack_server(res[1], res[2])
                 time.sleep(2)
                 pyo_server = start_pyo_server()
-        enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-        apply_effects( enabled_effects )
+            enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
+            apply_effects( enabled_effects )
         #print(res)
         time.sleep(0.0001)
 
