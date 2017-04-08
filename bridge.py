@@ -96,7 +96,7 @@ class Bridge:
         if intent == 'EFFECT':
             # update the effects
             configparser.update_config_file(parsed_data)
-            return (intent,)
+            return (intent, intent)
         elif intent == 'REQPORT':
             # request the ports
             ports = {}

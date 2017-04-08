@@ -24,6 +24,10 @@ SOCKET_TIMEOUT = 30 #seconds
 
 button_pin = 17
 
+PYO_INIT_SETTINGS = {
+    'audio':'jack',
+    'nchnls':1
+}
 
 def start_pyo_server():
     """Start the Pyo server
@@ -31,7 +35,7 @@ def start_pyo_server():
     Return the pyo instance of the server
     """
     print("Attempting to start the pyo server")
-    pyo_server = pyo.Server(audio='jack', nchnls=1).boot()
+    pyo_server = pyo.Server(**PYO_INIT_SETTINGS).boot()
     print("Pyo server booted")
     #pyo_server.setJackAuto( False, False )
     pyo_server.start()
@@ -182,6 +186,7 @@ def main():
 
     # JACK and Pyo set up procedures
     #jackserver.start_jack_server(2, 1)
+    pyo_server = None
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
@@ -270,9 +275,9 @@ def main():
                 pyo_server.shutdown()
                 jackserver.stop_jack_server(jack_id)
                 time.sleep(2)
-                jackserver.start_jack_server(res[1], res[2])
+                jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
                 time.sleep(2)
-                pyo_server = start_pyo_server()
+                pyo_server.reinit(**PYO_INIT_SETTINGS)
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects( enabled_effects )
         #print(res)
