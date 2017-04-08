@@ -64,9 +64,15 @@ def filter_port_selection(selected_port):
 
     Return the port selected formatted for JACK - hw:card,device
     """
-    card_num = selected_port.find('card') + 5
-    device_num = selected_port[(selected_port.find('device') + 7): (selected_port.rfind(':'))]
-    return "hw:" + str(card_num) + "," + str(device_num)
+    card_start = selected_port.find('card')
+    card_port_start = card_start + len('card ')
+    device_start = selected_port.find('device', card_start)
+    device_port_start = device_start + len('device ')
+    card_port_end = selected_port.rfind(':', card_port_start, device_start)
+    device_port_end = selected_port.rfind(':', device_port_start)
+    result = selected_port[card_port_start:card_port_end] + "," + selected_port[device_port_start:device_port_end]
+    print('filter_port_selection({0}) => {1}'.format(selected_port, result))
+    return result
     #print(str(card_num) + ", " + str(device_num))
 
 def get_clean_inports():
