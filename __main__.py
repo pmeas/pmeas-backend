@@ -92,7 +92,7 @@ def chain_effects( initial_source, config_effects_dict ):
             print("Enable chorus effect")
             enabled_effects.append(pyo.Chorus(
                 source,
-                depth=float(params['depth']),
+                depth=[(params['depth_min']), (params['depth_max'])],
                 feedback=float(params['feedback']),
                 bal=float(params['balance']),
                 mul=main_volume,
