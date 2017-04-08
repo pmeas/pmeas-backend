@@ -186,7 +186,6 @@ def main():
 
     # JACK and Pyo set up procedures
     #jackserver.start_jack_server(2, 1)
-    pyo_server = None
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
@@ -278,6 +277,8 @@ def main():
                 jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
                 time.sleep(2)
                 pyo_server.reinit(**PYO_INIT_SETTINGS)
+                pyo_server.boot()
+                pyo_server.start()
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects( enabled_effects )
         #print(res)
