@@ -20,19 +20,6 @@ then
     echo "[OK]"
 fi
 
-if [ "-nojack" == "$1" ]
-then
-    echo "nojack option enabled. Do not re-install jack"
-else
-    echo "Installing patched JACK."
-    sudo apt-get --force-yes --yes remove jackd
-    wget -O - http://rpi.autostatic.com/autostatic.gpg.key| sudo apt-key add -
-    sudo wget -O /etc/apt/sources.list.d/autostatic-audio-raspbian.list http://rpi.autostatic.com/autostatic-audio-raspbian.list
-    sudo apt-get update
-    sudo apt-get --no-install-recommends --force-yes --yes install jackd
-    echo "[OK]"
-fi
-
 # Check for successful Pyo installation. If not, force install.
 if [ "" == "$PYO_PKG_INSTALLED" ]
 then
@@ -41,5 +28,14 @@ then
     # Code to install Pyo here
     echo "[OK]"
 fi
+
+echo "Setting up systemd service"
+printf "[Unit]\nDescription=PMEAS Audio System\n\n[Service]\nType=forking\nExecStart=/bin/bash $PWD/pmeas.sh\nRestart=on-abort\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/pmeas.service
+sudo systemctl enable pmeas.service
+printf "Systemd service successfully registered\n"
+
+printf "Creating bash startup script\n"
+printf "#/bin/bash\n\npython $PWD &" > pmeas.sh
+printf "Bash script successfully created\n"
 
 echo "Installation complete. PMEAS Ready for use."
