@@ -70,8 +70,10 @@ class GpioController:
         """Change the state of the loop machine dependent on before state"""
         if self.BUTTON_STATE == 'INACTIVE' or self.BUTTON_STATE == 'LOOPING':
             self.BUTTON_STATE = 'RECORDING'
+            GPIO.output(23, GPIO.HIGH)
         elif self.BUTTON_STATE == 'RECORDING':
             self.BUTTON_STATE = 'ACTIVATE_LOOP'
+            GPIO.output(23, GPIO.LOW)
         elif self.BUTTON_STATE == 'ACTIVATE_LOOP':
             self.BUTTON_STATE = 'LOOPING'
         return self.BUTTON_STATE

@@ -160,6 +160,7 @@ def main():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(23, GPIO.OUT)
 
         gpio_controller = gpiocontrol.GpioController()
 
