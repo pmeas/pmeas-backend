@@ -80,7 +80,7 @@ def chain_effects( initial_source, config_effects_dict ):
                 source,
                 delay=[0, float(params['delay'])],
                 feedback=float(params['feedback']),
-                maxdelay=10,
+                maxdelay=5,
                 mul=main_volume,
                 add=0)
             )
