@@ -13,6 +13,10 @@ def start_jack_server(hw_in_port='0', hw_out_port='0'):
     Called ONLY when no existing JACK server is running on the machine.
     """
     PATH = "jack/jackd"
+
+    if os.uname()[4].startswith("arm"):
+        PATH = "jack/arm/jackd"
+
     jack_dir = os.path.join( os.path.dirname(os.path.abspath(__file__)), PATH)
 
     #cmd = 'jackd -P 70 -d alsa -r 48000 -p 512 -n 4 -D -C hw:{0} -P hw:{1} &'.format(hw_in_port, hw_out_port)
