@@ -24,15 +24,22 @@ SOCKET_TIMEOUT = 30 #seconds
 
 button_pin = 17
 
+PYO_INIT_SETTINGS = {
+    'audio':'jack',
+    'nchnls':1
+}
 
 def start_pyo_server():
     """Start the Pyo server
     
     Return the pyo instance of the server
     """
-    pyo_server = pyo.Server(audio='jack', nchnls=1).boot()
+    print("Attempting to start the pyo server")
+    pyo_server = pyo.Server(**PYO_INIT_SETTINGS).boot()
+    print("Pyo server booted")
     #pyo_server.setJackAuto( False, False )
     pyo_server.start()
+    print("Pyo server started")
     return pyo_server
 
 
@@ -174,7 +181,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jackserver.start_jack_server('1,0', '0,1')
+    jack_id = jackserver.start_jack_server('3,0', '1,0')
 
     time.sleep(5)
 
@@ -263,9 +270,19 @@ def main():
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
+            if 'UPDATEPORT' == res[0]:
+                print("Request to update ports")
+                pyo_server.shutdown()
+                jackserver.stop_jack_server(jack_id)
+                time.sleep(2)
+                jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
+                time.sleep(2)
+                pyo_server.reinit(**PYO_INIT_SETTINGS)
+                pyo_server.boot()
+                pyo_server.start()
             enabled_effects[-1].stop()
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
-            apply_effects(enabled_effects)
+            apply_effects( enabled_effects )
         #print(res)
         time.sleep(0.0001)
 
