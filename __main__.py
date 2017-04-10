@@ -52,10 +52,15 @@ def chain_effects( initial_source, config_effects_dict ):
 
         # print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
         params = config_effects_dict[effect]
-        if effect == 'volume':
+        if params['name'] == 'volume':
             # volume stuff
             print("Volume captured")
-            main_volume=float(params['vol'])
+            enabled_effects.append(pyo.Tone(
+                source,
+                freq=20000,
+                mul=float(params['vol'])
+                )
+            )
 
         elif params['name'] == 'distortion':
             # distortion stuff
@@ -181,7 +186,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('3,0', '1,0')
+    jack_id = jackserver.start_jack_server('1,0', '2,0')
 
     time.sleep(5)
 
