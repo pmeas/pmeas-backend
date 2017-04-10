@@ -28,7 +28,7 @@ class Bridge:
         #s.setblocking(0)
         #s.bind(('', UDP_PORT))
         #sock.bind(('', TCP_PORT))
-        
+
         response = None
         #receive 1 byte message and send back to frontend
         if not self.TCP_CONN:
@@ -49,19 +49,20 @@ class Bridge:
                 self.c, self.addr = sock.accept()
                 if self.c is not None:
                     self.TCP_CONN = True
+                    self.c.setblocking(0)
                 print("Accepted connection from: " + str(self.addr))
             except socket.error:
                 return
-        
+
         if self.TCP_CONN:
             try:
                 data = self.c.recv(1024)
                 print("Received data!" + data)
                 parsed_data = configparser.parse_json_data(data)
                 response = self.respond_to_intent(parsed_data)
-                self.c.send(response[1])
+                self.c.send(response[1] + "\n")
             except socket.error as error:
-                print("Caught an error" + str(error))
+                pass
             except ValueError:
                 self.TCP_CONN = False
                 pass

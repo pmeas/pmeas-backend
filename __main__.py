@@ -99,7 +99,7 @@ def chain_effects( initial_source, config_effects_dict ):
             print("Enable chorus effect")
             enabled_effects.append(pyo.Chorus(
                 source,
-                depth=float(params['depth']),
+                depth=[(params['depth_min']), (params['depth_max'])],
                 feedback=float(params['feedback']),
                 bal=float(params['balance']),
                 mul=main_volume,
@@ -167,6 +167,7 @@ def main():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         GPIO.setup(button_pin, GPIO.IN, GPIO.PUD_UP)
+        GPIO.setup(23, GPIO.OUT)
 
         gpio_controller = gpiocontrol.GpioController()
 
@@ -180,7 +181,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('1,0', '0,0')
+    jack_id = jackserver.start_jack_server('3,0', '1,0')
 
     time.sleep(5)
 
@@ -279,6 +280,7 @@ def main():
                 pyo_server.reinit(**PYO_INIT_SETTINGS)
                 pyo_server.boot()
                 pyo_server.start()
+            enabled_effects[-1].stop()
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects( enabled_effects )
         #print(res)

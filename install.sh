@@ -20,15 +20,6 @@ then
     echo "[OK]"
 fi
 
-# Check for successful JACK installation. If not, force install.
-if [ "" == "$JACK_PKG_INSTALLED" ]
-then
-    echo "Could not find JACK installation. Installing JACK."
-    # An issue here is that JACK for the PI uses a patched version of JACK and not from def. repository.
-    sudo apt-get --force-yes --yes install jackd
-    echo "[OK]"
-fi
-
 # Check for successful Pyo installation. If not, force install.
 if [ "" == "$PYO_PKG_INSTALLED" ]
 then
@@ -37,5 +28,14 @@ then
     # Code to install Pyo here
     echo "[OK]"
 fi
+
+echo "Setting up systemd service"
+printf "[Unit]\nDescription=PMEAS Audio System\n\n[Service]\nType=forking\nExecStart=/bin/bash $PWD/pmeas.sh\nRestart=on-abort\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/pmeas.service
+sudo systemctl enable pmeas.service
+printf "Systemd service successfully registered\n"
+
+printf "Creating bash startup script\n"
+printf "#/bin/bash\n\npython $PWD &" > pmeas.sh
+printf "Bash script successfully created\n"
 
 echo "Installation complete. PMEAS Ready for use."
