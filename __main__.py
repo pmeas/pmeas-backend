@@ -45,13 +45,18 @@ def start_pyo_server():
 
 def chain_effects( initial_source, config_effects_dict ):
     vol = 1 #default volume
+    enabled_effects = [initial_source]
+    source = enabled_effects[len(enabled_effects) - 1]
     if "volume" in config_effects_dict:
         vol = config_effects_dict.pop("volume")
+        enabled_effects.append(pyo.Tone(
+                source,
+                freq = 1000,
+                mul = vol
+                )
+        )
     
-    enabled_effects = [initial_source]
     for effect in sorted(config_effects_dict.keys()):
-
-        source = enabled_effects[len(enabled_effects) - 1]
 
         # print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
         params = config_effects_dict[effect]
