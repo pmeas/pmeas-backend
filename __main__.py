@@ -4,9 +4,9 @@ GPIO_CAPABLE = False
 
 import time
 from functools import partial
-import pyo
 import signal
 import sys
+import pyo
 try:
     import RPi.GPIO as GPIO
     GPIO_CAPABLE = True
