@@ -3,7 +3,9 @@
 GPIO_CAPABLE = False
 
 import time
-
+from functools import partial
+import signal
+import sys
 import pyo
 try:
     import RPi.GPIO as GPIO
@@ -41,6 +43,13 @@ def start_pyo_server():
     pyo_server.start()
     print("Pyo server started")
     return pyo_server
+
+def stop_pyo_server(pyo_server):
+    """Stop the Pyo server
+    """
+    print("Attempting to stop the pyo server")
+    pyo_server.stop()
+    print("Pyo server stoped")
 
 
 def chain_effects( initial_source, config_effects_dict ):
@@ -166,6 +175,14 @@ def apply_effects( effects_list ):
     effects_list[len(effects_list) - 1].out()
     print("APPLIED EFFECTS: ", effects_list)
 
+def signal_handler(jack_id, pyo_server, signal, frame):
+    stop_pyo_server(pyo_server)
+    time.sleep(1)
+    jackserver.stop_jack_server()
+    time.sleep(1)
+    jackserver.kill_jack_server(jack_id)
+    sys.exit(0)
+
 def main():
 
     # If GPIO is enabled, initialize the pins and GPIO module.
@@ -210,6 +227,7 @@ def main():
     already_recording = False
     recording_time = 0
     inactive_end_time = 0
+    signal.signal(signal.SIGINT, partial(signal_handler, jack_id, pyo_server))
 
     while True:
         # Effects have now been loaded from last good configuration

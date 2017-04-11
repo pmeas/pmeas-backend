@@ -26,8 +26,12 @@ def start_jack_server(hw_in_port='0', hw_out_port='0'):
     print("ID OF JACK (supposedly): " + str(proc_id))
     return proc_id
 
-def stop_jack_server(jack_id):
+def kill_jack_server(jack_id):
     cmd = ['kill', '-s', '9', str(jack_id)]
+    process = subprocess.Popen(cmd, shell=False)
+
+def stop_jack_server():
+    cmd = ['jack_control', 'stop']
     process = subprocess.Popen(cmd, shell=False)
 
 def get_input_devices():
