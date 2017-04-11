@@ -44,6 +44,13 @@ def start_pyo_server():
     print("Pyo server started")
     return pyo_server
 
+def stop_pyo_server(pyo_server):
+    """Stop the Pyo server
+    """
+    print("Attempting to stop the pyo server")
+    pyo_server.stop()
+    print("Pyo server stoped")
+
 
 def chain_effects( initial_source, config_effects_dict ):
     main_volume = 1 #default volume 
