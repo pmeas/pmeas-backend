@@ -44,28 +44,33 @@ def start_pyo_server():
 
 
 def chain_effects( initial_source, config_effects_dict ):
-    main_volume = 1 #default volume 
+    vol = 1 #default volume
     enabled_effects = [initial_source]
+    source = enabled_effects[len(enabled_effects) - 1]
+    if "volume" in config_effects_dict:
+        vol = config_effects_dict.pop("volume")
+        enabled_effects.append(pyo.Tone(
+                source,
+                freq = 1000,
+                mul = vol
+                )
+        )
+    
     for effect in sorted(config_effects_dict.keys()):
-
-        source = enabled_effects[len(enabled_effects) - 1]
 
         # print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
         params = config_effects_dict[effect]
-        if effect == 'volume':
-            # volume stuff
-            print("Volume captured")
-            main_volume=float(params['vol'])
+        # volume stuff
 
-        elif params['name'] == 'distortion':
+        if params['name'] == 'distortion':
             # distortion stuff
             print("Enable distortion effect")
             enabled_effects.append(pyo.Disto(
                 source,
                 drive=float(params['drive']),
                 slope=float(params['slope']),
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'delay':
@@ -75,9 +80,9 @@ def chain_effects( initial_source, config_effects_dict ):
                 source,
                 delay=[0, float(params['delay'])],
                 feedback=float(params['feedback']),
-                maxdelay=10,
-                mul=main_volume,
-                add=0)
+                maxdelay=5,
+                mul = vol
+                )
             )
 
         elif params['name'] == 'reverb':
@@ -90,8 +95,8 @@ def chain_effects( initial_source, config_effects_dict ):
                 cutoff=float(params['cutoff']),
                 bal=float(params['balance']),
                 roomSize=float(params['roomsize']),
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'chorus':
@@ -102,8 +107,8 @@ def chain_effects( initial_source, config_effects_dict ):
                 depth=[(params['depth_min']), (params['depth_max'])],
                 feedback=float(params['feedback']),
                 bal=float(params['balance']),
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'flanger':
@@ -114,8 +119,8 @@ def chain_effects( initial_source, config_effects_dict ):
                 depth=float(params['depth']),
                 freq=float(params['freq']),
                 feedback=float(params['feedback']),
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'freqshift':
@@ -124,8 +129,8 @@ def chain_effects( initial_source, config_effects_dict ):
             enabled_effects.append(pyo.FreqShift(
                 source,
                 shift=params['shift'],
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'harmonizer':
@@ -136,8 +141,8 @@ def chain_effects( initial_source, config_effects_dict ):
                 transpo=params['transpose'],
                 feedback=float(params['feedback']),
                 winsize=0.1,
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
         elif params['name'] == 'phaser':
@@ -150,8 +155,8 @@ def chain_effects( initial_source, config_effects_dict ):
                 q=float(params['q']),
                 feedback=float(params['feedback']),
                 num=int(params['num']),
-                mul=main_volume,
-                add=0)
+                mul = vol
+                )
             )
 
     return enabled_effects
@@ -159,6 +164,7 @@ def chain_effects( initial_source, config_effects_dict ):
 
 def apply_effects( effects_list ):
     effects_list[len(effects_list) - 1].out()
+    print("APPLIED EFFECTS: ", effects_list)
 
 def main():
 
@@ -181,7 +187,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('3,0', '1,0')
+    jack_id = jackserver.start_jack_server('1,0', '2,0')
 
     time.sleep(5)
 
