@@ -60,13 +60,13 @@ def chain_effects( initial_source, config_effects_dict ):
         vol = config_effects_dict.pop("volume")
         enabled_effects.append(pyo.Tone(
                 source,
-                freq = 1000,
+                freq = 20000,
                 mul = vol
                 )
         )
     
     for effect in sorted(config_effects_dict.keys()):
-
+	source = enabled_effects[len(enabled_effects) - 1]
         # print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
         params = config_effects_dict[effect]
         # volume stuff
@@ -204,7 +204,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('1,0', '2,0')
+    jack_id = jackserver.start_jack_server('2,0', '1,0')
 
     time.sleep(5)
 
