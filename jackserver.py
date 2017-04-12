@@ -1,8 +1,14 @@
 import os
 import subprocess
 
+def get_default_in_port():
+    return get_clean_inports()[0]
 
-def start_jack_server(hw_in_port='0', hw_out_port='0'):
+def get_default_out_port():
+    return get_clean_outports()[0]
+
+def start_jack_server(hw_in_port=get_default_in_port(),
+        hw_out_port=get_default_out_port()):
     """
     Start the JACK server.
 
