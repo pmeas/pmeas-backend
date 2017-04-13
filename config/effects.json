@@ -1,1 +1,1 @@
-{"1": {"freq": 0.5, "depth": 0.5, "feedback": 0.5, "name": "flanger"}, "0": {"delay": 1, "feedback": 0.5, "name": "delay"}, "3": {"cutoff": 5000, "balance": 0.5, "name": "reverb", "roomsize": 1, "revtime": 1}, "2": {"slope": 0.5, "drive": 0.75, "name": "distortion"}}
+{"1": {"slope": 0.5, "name": "distortion", "drive": 0.5}, "0": {"delay": 0.5, "name": "delay", "feedback": 0.5}}
