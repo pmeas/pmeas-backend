@@ -53,6 +53,7 @@ def stop_pyo_server(pyo_server):
 
 
 def chain_effects( initial_source, config_effects_dict ):
+    '''Loops through the effects and assembles their configuration in order according to their keys.'''
     vol = 1 #default volume
     enabled_effects = [initial_source]
     source = enabled_effects[len(enabled_effects) - 1]
@@ -172,10 +173,12 @@ def chain_effects( initial_source, config_effects_dict ):
 
 
 def apply_effects( effects_list ):
+    '''Once an effects list has been assembled by chain_effects, use this function to enable it'''
     effects_list[len(effects_list) - 1].out()
     print("APPLIED EFFECTS: ", effects_list)
 
 def signal_handler(jack_id, pyo_server, signal, frame):
+    '''This is the way to close the program'''
     stop_pyo_server(pyo_server)
     time.sleep(1)
     jackserver.stop_jack_server()
@@ -184,7 +187,7 @@ def signal_handler(jack_id, pyo_server, signal, frame):
     sys.exit(0)
 
 def main():
-
+    '''Main method. Inits gpio, bridge, jack, and pyo. Then reads effects and starts handling gpio'''
     # If GPIO is enabled, initialize the pins and GPIO module.
     if GPIO_CAPABLE:
         GPIO.setmode(GPIO.BCM)
