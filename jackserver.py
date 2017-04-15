@@ -27,10 +27,12 @@ def start_jack_server(hw_in_port='0', hw_out_port='0'):
     return proc_id
 
 def kill_jack_server(jack_id):
+    '''it kills the jack server. this one isn't as nice as "stop" but it's more reliable'''
     cmd = ['kill', '-s', '9', str(jack_id)]
     process = subprocess.Popen(cmd, shell=False)
 
 def stop_jack_server():
+    '''this is the "correct" way to stop jack, but we were having issues with it so instead we workaround with kill_jack_server'''
     cmd = ['jack_control', 'stop']
     process = subprocess.Popen(cmd, shell=False)
 
