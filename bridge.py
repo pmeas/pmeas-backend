@@ -3,8 +3,8 @@ import json, socket, subprocess, sys, configparser, jackserver
 UDP_PORT = 10000
 TCP_PORT = 10001
 
-#TODO add ability for backend to send audio interfaces to frontend
 class Bridge:
+    '''Bridge class is responsible for handling network communication in the app'''
     def __init__(self):
         self.TCP_CONN = False
         self.c = None
