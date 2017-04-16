@@ -181,8 +181,6 @@ def signal_handler(jack_id, pyo_server, signal, frame):
     '''This is the way to close the program'''
     stop_pyo_server(pyo_server)
     time.sleep(1)
-    jackserver.stop_jack_server()
-    time.sleep(1)
     jackserver.kill_jack_server(jack_id)
     sys.exit(0)
 
@@ -207,7 +205,7 @@ def main():
     sock.bind(('', 10001))
 
     # Add your own input and output ports here for now
-    jack_id = jackserver.start_jack_server('2,0', '1,0')
+    jack_id = jackserver.start_jack_server()
 
     time.sleep(5)
 
@@ -300,7 +298,7 @@ def main():
             if 'UPDATEPORT' == res[0]:
                 print("Request to update ports")
                 pyo_server.shutdown()
-                jackserver.stop_jack_server(jack_id)
+                jackserver.kill_jack_server(jack_id)
                 time.sleep(2)
                 jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
                 time.sleep(2)
