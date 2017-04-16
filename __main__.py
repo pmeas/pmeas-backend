@@ -300,7 +300,7 @@ def main():
                 pyo_server.shutdown()
                 jackserver.kill_jack_server(jack_id)
                 time.sleep(2)
-                jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
+                jack_id = jackserver.start_jack_server(jackserver.filter_port_selection(res[1]), jackserver.filter_port_selection(res[2]))
                 time.sleep(2)
                 pyo_server.reinit(**PYO_INIT_SETTINGS)
                 pyo_server.boot()
