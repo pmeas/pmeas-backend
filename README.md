@@ -38,6 +38,7 @@ Through the help of Python, we are able to support all Linux based distrbutions,
 1. Clone this repo to a local directory.
 2. Run the install script `sudo ./install.sh` to download all necessary dependencies and register the service with systemd.
 3. Start the PMEAS service by calling `sudo systemctl start pmeas.service`.
+4. To enable the optional loop machine functionality, follow the instructions outlined in the [GPIO Installation Guide](docs/gpioinstall.md "GPIO Install Guide")
 
 *(The service will also start independently on boot of the system. )*
 
