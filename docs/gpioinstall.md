@@ -10,6 +10,10 @@ The PMEAS system supports loop machine functionality to allow the musician to re
 * LED light
 
 ### Installation Procedures
-> Before connecting any components to the device, ensure it is powered off to avoid shorting the device
+> Before connecting any components to the device, ensure it is powered off to avoid shorting the device or any of the components.
 
+1. Set up the broadboard to match the image below:
 
+2. Connect the breadboard with the Pi by following the image below:
+
+3. Power on the Pi and use the stompbox to confirm it works as intended.
