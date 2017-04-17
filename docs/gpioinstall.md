@@ -14,7 +14,7 @@ The PMEAS system supports loop machine functionality to allow the musician to re
 
 1. Begin by assembling the breadboard in a similar fashion as the image below
 
-![Breadboard Connections Image](breadboard_connections.jpeg =100x100)
+![Breadboard Connections Image](breadboard_connections.jpeg "Breadboard Connectors")
 
 > Take note here that for the stompbox seen in the photo, the red-colored connector pin will be connected to power, and the green-colored connector pin will connect to ground. 
 
