@@ -24,12 +24,13 @@ class Bridge:
         Return the response sent to the GUI by the server.
         """
         response = None
-        #receive 1 byte message and send back to frontend
+        # Receive 1 byte message and send back to frontend
+        # If there is already a connection, don't accept another one.
         if not self.TCP_CONN:
             try:
                 data, wherefrom = s.recvfrom(1024)
                 if data == "1":
-                    print("Got a 1")
+                    print("Got a request")
                     s.sendto(str(TCP_PORT), wherefrom)
             except socket.error:
                 pass
@@ -48,12 +49,16 @@ class Bridge:
             except socket.error:
                 return
 
+
+        # If there is a connection, see if there is data to be read.
         if self.TCP_CONN:
             try:
                 data = self.c.recv(1024)
                 print("Received data!" + data)
+                # There is data to be read - see what the request is.
                 parsed_data = configparser.parse_json_data(data)
                 response = self.respond_to_intent(parsed_data)
+                # Send back the result of the response.
                 self.c.send(response[1] + "\n")
             except socket.error as error:
                 pass
@@ -76,18 +81,18 @@ class Bridge:
         """
         intent = parsed_data.pop('intent', None)
         if intent == 'EFFECT':
-            # update the effects
+            # The intent wants to add new effects.
             configparser.update_config_file(parsed_data)
             return (intent, intent)
         elif intent == 'REQPORT':
-            # request the ports
+            # Intent wants to see what audio ports are available.
             ports = {}
             ports['input'] = jackserver.get_clean_inports()
             ports['output'] = jackserver.get_clean_outports()
             ports_str = json.dumps(ports)
             return (intent, ports_str)
         elif intent == 'UPDATEPORT':
-            #update the ports
+            # Intent wants to set new audio ports (playback/capture)
             return (intent, parsed_data['in'], parsed_data['out'])
         else:
             return ()

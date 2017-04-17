@@ -9,6 +9,7 @@ def read_config_file():
     """
     effects_file = os.path.join( os.path.dirname(os.path.abspath(__file__)), PATH)
 
+    # Open teh configuration file and read the contents.
     config_file = open(effects_file)
     config_data = config_file.read()
     config_file.close()
@@ -45,6 +46,7 @@ def update_config_file(data):
 
     effects_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), PATH)
 
+    # Write all the contents of the JSON into the configuration file.
     with open(effects_file, "w") as config_file:
         config_file.write(data_to_json)
 

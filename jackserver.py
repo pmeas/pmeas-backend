@@ -2,13 +2,11 @@ import os
 import subprocess
 
 def kill_jack_server(jack_id):
-    '''it kills the jack server. this one isn't as nice as "stop" but it's more reliable'''
-    cmd = ['kill', '-s', '9', str(jack_id)]
-    process = subprocess.Popen(cmd, shell=False)
+    '''Kills the JACK server.
 
-def stop_jack_server():
-    '''this is the "correct" way to stop jack, but we were having issues with it so instead we workaround with kill_jack_server'''
-    cmd = ['jack_control', 'stop']
+    jack_id - The process ID of JACK to kill.
+    '''
+    cmd = ['kill', '-s', '9', str(jack_id)]
     process = subprocess.Popen(cmd, shell=False)
 
 def get_input_devices():
@@ -36,6 +34,7 @@ def filter_shell_output(data):
     """
     sound_devices = []
     data_arr = data.split("\n")
+    # Get only the output from the shell where the audio cards are used
     for line in data_arr:
         if 'card' in line:
             sound_devices.append(line)
@@ -62,7 +61,6 @@ def filter_port_selection(selected_port):
     result = selected_port[card_port_start:card_port_end] + "," + selected_port[device_port_start:device_port_end]
     print('filter_port_selection({0}) => {1}'.format(selected_port, result))
     return result
-    #print(str(card_num) + ", " + str(device_num))
 
 def get_default_in_port():
     """Get the filtered default initial inport to listen on"""
@@ -99,11 +97,13 @@ def start_jack_server(hw_in_port=get_default_in_port(),
     """
     PATH = "jack/jackd"
 
+    # If we are utilizing an ARM CPU, use the ARM build of JACK
     if os.uname()[4].startswith("arm"):
         PATH = "jack/arm/jackd"
 
     jack_dir = os.path.join( os.path.dirname(os.path.abspath(__file__)), PATH)
 
+    # Call the JACK server in a separate shell call
     cmd = [jack_dir, '-P', '70', '-t', '2000', '-d', 'alsa', '-r', '48000', '-p', '512', '-n', '4', '-D', '-C', 'hw:'+hw_in_port, '-P', 'hw:'+hw_out_port, '-s', '&']
     process = subprocess.Popen(cmd, shell=False)
     proc_id = process.pid

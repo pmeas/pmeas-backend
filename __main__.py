@@ -187,7 +187,7 @@ def apply_effects( effects_list ):
     print("APPLIED EFFECTS: ", effects_list)
 
 def signal_handler(jack_id, pyo_server, signal, frame):
-    '''This is the way to close the program'''
+    '''Close the program and kill JACK appropriately'''
     stop_pyo_server(pyo_server)
     time.sleep(1)
     jackserver.kill_jack_server(jack_id)
@@ -300,6 +300,8 @@ def main():
         if res:
             print(res)
             if 'UPDATEPORT' == res[0]:
+                # There was a request to update the ports. Kill the
+                # JACK server and restart it with the new ports.
                 print("Request to update ports")
                 pyo_server.shutdown()
                 jackserver.kill_jack_server(jack_id)
