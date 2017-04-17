@@ -53,7 +53,12 @@ def stop_pyo_server(pyo_server):
 
 
 def chain_effects( initial_source, config_effects_dict ):
-    '''Loops through the effects and assembles their configuration in order according to their keys.'''
+    '''
+    Loop through the effects and assembles their configuration in order according to their keys.
+    
+    initial_source - the medium by which the audio stream is read (i.e through the input port)
+    config_effects_dict - the list of effects to enable on top of the audio stream.
+    '''
     vol = 1 #default volume
     enabled_effects = [initial_source]
     source = enabled_effects[len(enabled_effects) - 1]

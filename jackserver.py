@@ -65,21 +65,23 @@ def filter_port_selection(selected_port):
     #print(str(card_num) + ", " + str(device_num))
 
 def get_default_in_port():
+    """Get the filtered default initial inport to listen on"""
     return filter_port_selection(get_clean_inports()[0])
 
 def get_default_out_port():
+    """Get the filtered default initial outport to listen on"""
     return filter_port_selection(get_clean_outports()[0])
 
 def get_clean_inports():
     """
-    Return the filtered input ports
+    Return all the filtered input ports to send to the frontend.
     """
     arecord_res = get_input_devices()
     return filter_shell_output(arecord_res)
 
 def get_clean_outports():
     """
-    Return the filtered output ports
+    Return the filtered output ports to send to the frontend.
     """
     aplay_res = get_output_devices()
     return filter_shell_output(aplay_res)
@@ -102,7 +104,6 @@ def start_jack_server(hw_in_port=get_default_in_port(),
 
     jack_dir = os.path.join( os.path.dirname(os.path.abspath(__file__)), PATH)
 
-    #cmd = 'jackd -P 70 -d alsa -r 48000 -p 512 -n 4 -D -C hw:{0} -P hw:{1} &'.format(hw_in_port, hw_out_port)
     cmd = [jack_dir, '-P', '70', '-t', '2000', '-d', 'alsa', '-r', '48000', '-p', '512', '-n', '4', '-D', '-C', 'hw:'+hw_in_port, '-P', 'hw:'+hw_out_port, '-s', '&']
     process = subprocess.Popen(cmd, shell=False)
     proc_id = process.pid

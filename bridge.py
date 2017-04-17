@@ -68,19 +68,6 @@ class Bridge:
                 pass
 
         return response
-        """
-        response = None
-        try:
-            data, wherefrom = s.recvfrom(1024)
-            parsed_data = configparser.parse_json_data(data)
-
-            response = respond_to_intent(parsed_data)
-
-            s.sendto(response, wherefrom)
-        except socket.error:
-            pass
-        return response
-        """
 
     def respond_to_intent(self, parsed_data):
         """
@@ -111,11 +98,3 @@ class Bridge:
         else:
             return ()
         
-if __name__ == '__main__':
-    #USAGE bridge <frontend|backend>
-    #run the frontend THEN the backend
-    if sys.argv[1] == 'frontend':
-        frontend(sys.stdin.read())
-    elif sys.argv[1] == 'backend':
-        sys.stdout.write(backend())
-
