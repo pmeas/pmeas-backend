@@ -12,8 +12,14 @@ The PMEAS system supports loop machine functionality to allow the musician to re
 ### Installation Procedures
 > Before connecting any components to the device, ensure it is powered off to avoid shorting the device or any of the components.
 
-1. Set up the broadboard to match the image below:
+1. Begin by assembling the breadboard in a similar fashion as the image below
+
+> Take note here that for the stompbox seen in the photo, the red-colored connector pin will be connected to power, and the green-colored connector pin will connect to ground. 
+
+> The LED light we use here requires the use of a 220-ohm resistor. Make sure any LED you place receives the proper amount of voltage to avoid shorting the board.
 
 2. Connect the breadboard with the Pi by following the image below:
+
+> Be careful to power the stompbox and the LED light with the proper pins on the Pi, else the circuit will never be activated. In this project, **Raspberry Pi 3B GPIO pin number 17 is used to activate the stompbox, and GPIO pin number 23 is used to activate the LED light.** [Click here](https://developer.microsoft.com/en-us/windows/iot/docs/pinmappingsrpi "Raspberry Pi GPIO Pins") to see where you can locate these pins on the Pi board. Ground can be connected to any of the pins labelled with "GND" as seen in the link. For our purposes, we use board pin 39 (i.e the lowest pin on the left side) for ease of identification.
 
 3. Power on the Pi and use the stompbox to confirm it works as intended.
