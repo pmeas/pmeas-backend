@@ -23,12 +23,6 @@ class Bridge:
 
         Return the response sent to the GUI by the server.
         """
-        #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #s.setblocking(0)
-        #s.bind(('', UDP_PORT))
-        #sock.bind(('', TCP_PORT))
-
         response = None
         #receive 1 byte message and send back to frontend
         if not self.TCP_CONN:

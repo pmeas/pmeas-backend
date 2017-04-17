@@ -39,7 +39,6 @@ def start_pyo_server():
     print("Attempting to start the pyo server")
     pyo_server = pyo.Server(**PYO_INIT_SETTINGS).boot()
     print("Pyo server booted")
-    #pyo_server.setJackAuto( False, False )
     pyo_server.start()
     print("Pyo server started")
     return pyo_server
@@ -49,7 +48,7 @@ def stop_pyo_server(pyo_server):
     """
     print("Attempting to stop the pyo server")
     pyo_server.stop()
-    print("Pyo server stoped")
+    print("Pyo server stopped")
 
 
 def chain_effects( initial_source, config_effects_dict ):
@@ -61,7 +60,11 @@ def chain_effects( initial_source, config_effects_dict ):
     '''
     vol = 1 #default volume
     enabled_effects = [initial_source]
+
+    # Make the source of the next effect the previously applied effect.
     source = enabled_effects[len(enabled_effects) - 1]
+
+    # If the volume was set, change the default value to the requested volume.
     if "volume" in config_effects_dict:
         vol = config_effects_dict.pop("volume")
         enabled_effects.append(pyo.Tone(
@@ -71,11 +74,12 @@ def chain_effects( initial_source, config_effects_dict ):
                 )
         )
     
+    # Run through all the effects in our configuration file and apply
+    # them to the previously used stream (i.e source)
     for effect in sorted(config_effects_dict.keys()):
 	source = enabled_effects[len(enabled_effects) - 1]
         # print("Effect: " + effect + ", Params: " + str(effects_dict[effect]))
         params = config_effects_dict[effect]
-        # volume stuff
 
         if params['name'] == 'distortion':
             # distortion stuff
@@ -200,8 +204,10 @@ def main():
 
         gpio_controller = gpiocontrol.GpioController()
 
+    # Initialize the bridge to allow the app to accept connections.
     bridge_conn = bridge.Bridge()
 
+    # Set up custom options for the sockets
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #UDP SOCKET
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP SOCKET
     s.setblocking(0)
@@ -209,13 +215,12 @@ def main():
     s.bind(('', 10000))
     sock.bind(('', 10001))
 
-    # Add your own input and output ports here for now
     jack_id = jackserver.start_jack_server()
 
+    # give the application time for JACK to boot.
     time.sleep(5)
 
     # JACK and Pyo set up procedures
-    #jackserver.start_jack_server(2, 1)
     pyo_server = start_pyo_server()
     pyo_server.setJackAuto()
 
@@ -236,14 +241,7 @@ def main():
     signal.signal(signal.SIGINT, partial(signal_handler, jack_id, pyo_server))
 
     while True:
-        # Effects have now been loaded from last good configuration
-        # and the modulator is ready, so we'll block and await
-        # await a new configuration. When one arrives, we'll
-        # restart the program
-        # TODO: Check the result of res to see if we should update effects.
-
         # Executes GPIO and loop machine logic flow.
-        # TODO: Transfer flow to another process to simplify main() readability.
         if GPIO_CAPABLE:
             # Read the state of the button press. 
             BUTTON_STATE = gpio_controller.update_gpio()
@@ -297,6 +295,7 @@ def main():
                     )
                 gpio_controller.set_state("INACTIVE")
 
+        # See if we got a message from the frontend application
         res = bridge_conn.backend(s,sock)
         if res:
             print(res)
@@ -313,7 +312,6 @@ def main():
             enabled_effects[-1].stop()
             enabled_effects = chain_effects(pyo.Input(chnl=0), configparser.get_effects())
             apply_effects( enabled_effects )
-        #print(res)
         time.sleep(0.0001)
 
 
