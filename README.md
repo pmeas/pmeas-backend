@@ -37,10 +37,12 @@ Through the help of Python, we are able to support all Linux based distrbutions,
 ### Instructions
 1. Clone this repo to a local directory.
 2. Run the install script `sudo ./install.sh` to download all necessary dependencies and register the service with systemd.
-3. Start the PMEAS service by calling `sudo systemctl start pmeas.service`.
-4. To enable the optional loop machine functionality, follow the instructions outlined in the [GPIO Installation Guide](docs/gpioinstall.md "GPIO Install Guide")
+3. Plug the instrument to be played into a USB port on the modulation device.
+4. Plug the speaker that will be used to project the modulated audio into the 3.5mm jack port on the modulation device.
+5. Start the PMEAS service by calling `sudo systemctl start pmeas.service`.
+6. To enable the optional loop machine functionality, follow the instructions outlined in the [GPIO Installation Guide](docs/gpioinstall.md "GPIO Install Guide")
 
-*(The service will also start independently on boot of the system. )*
+*(The service will also start independently on boot of the system. Just ensure the instrument and speakers are plugged into the ports)*
 
 ## Common Issues
 * [Application crash](https://github.com/pmeas/pmeas-backend/issues/64)
